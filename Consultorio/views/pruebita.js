@@ -4,7 +4,7 @@ let jugador = 0
 let pc = 2
 jugador = prompt("Elige: 1 para piedra, 2 para papel, 3 para tijera")
 
-let aleatorio = Math.floor(Math.random() * 3) + 1
+let aleatorio = Math.floor(Math.random() * (3-1+1)) + 1
 
 if (jugador == 1){
     alert ("Elegiste piedra")
@@ -48,3 +48,21 @@ if (jugador == 1){
     else{
         alert ("Elige un número incorrecto")
     }
+
+var n = 0;
+var num = 10;
+
+// while (n < num) {
+//   n++;
+//   console.log(n);
+// }
+
+// for (n; n < num; n++) {
+//     alert("Los números son: " + n);
+// }
+
+do {
+    n++;
+    console.log(n);
+    document.write(n + "<br>");
+} while (n < num);
