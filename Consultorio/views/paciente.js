@@ -1,376 +1,127 @@
-// Inicialización
-function init() {
-    $("#frm_estudiantes").on("submit", function (e) {
-        guardar(e);
-    });
-    $("#frm_editar_estudiantes").on("submit", function (e) {
-        editar(e);
-    });
-}
+document.addEventListener("DOMContentLoaded", function () {
+    const formPaciente = document.getElementById("frm_paciente");
 
-$(document).ready(() => {
-    cargaTabla();
-});
+    // Evento para el envío del formulario
+    formPaciente.addEventListener("submit", function (event) {
+        event.preventDefault(); // Evita la redirección predeterminada del formulario
 
+        const formData = new FormData(formPaciente);
+        const idPaciente = document.getElementById("id_paciente").value;
 
+        // Determina si es una edición o una creación
+        const action = idPaciente ? 'updatePaciente' : 'addPaciente';
 
-
-// Cargar la tabla de estudiantes
-var cargaTabla = () => {
-    var html = "";
-
-    $.get("../controllers/estudiante.controller.php?op=listar", (response) => {
-        try {
-            var listaEstudiantes = JSON.parse(response);
-        } catch (e) {
-            console.error("Error parsing JSON:", e);
-            return;
-        }
-
-        if (Array.isArray(listaEstudiantes)) {
-            $.each(listaEstudiantes, (indice, unEstudiante) => {
-                html += `
-                    <tr>
-                        <td>${indice + 1}</td>
-                        <td>${unEstudiante.id_estudiante}</td>  
-                        <td>${unEstudiante.nombre}</td>
-                        <td>${unEstudiante.apellido}</td>
-                        <td>${unEstudiante.fecha_nacimiento}</td>
-                        <td>
-                            <button class="btn btn-primary" onclick="cargarEstudiante(${unEstudiante.id_estudiante})">Editar</button>
-                            <button class="btn btn-danger" onclick="eliminar(${unEstudiante.id_estudiante})">Eliminar</button>
-                        </td>
-                    </tr>
-                `;
-            });
-            $("#cuerpoestudiantes").html(html);
-        } else {
-            console.error("Expected an array but got:", listaEstudiantes);
-        }
-    });
-};
-
-
-var cargarEstudiante = (id_estudiante) => {
-    console.log("ID del estudiante:", id_estudiante);
-    $.get("../controllers/estudiante.controller.php?op=uno&id=" + id_estudiante, (data) => {
-        var Estudiante = JSON.parse(data);
-        console.log("Estudiante encontrado:", Estudiante);
-        $("#EditarEstudianteId").val(Estudiante.id_estudiante);
-        $("#NombreE").val(Estudiante.nombre);
-        $("#ApellidoE").val(Estudiante.apellido);
-        $("#FechaNacimientoE").val(Estudiante.fecha_nacimiento);
-        $("#modalEditarEstudiante").modal("show");
-    }).fail(function() {
-        Swal.fire({
-            title: "Estudiantes",
-            text: "Ocurrió un error al intentar obtener los datos del estudiante",
-            icon: "error",
-        });
-    });
-};
-
-var buscarEstudiante = (id_estudiante) => {
-    $.get("../controllers/estudiante.controller.php?op=uno&id=" + id_estudiante, (data) => {
-        try {
-            var Estudiante = JSON.parse(data);
-
-            if (Estudiante && Estudiante.id_estudiante) {
-                console.log("Estudiante encontrado:", Estudiante);
-
-                var html="";
-
-                html += `
-                    <tr>
-                        <td>${Estudiante.id_estudiante}</td>
-                        <td>${Estudiante.nombre}</td>
-                        <td>${Estudiante.apellido}</td>
-                        <td>${Estudiante.fecha_nacimiento}</td>
-                        <td>
-                            <button class="btn btn-primary" onclick="cargarEstudiante(${Estudiante.id_estudiante})">Editar</button>
-                            <button class="btn btn-danger" onclick="eliminar(${Estudiante.id_estudiante})">Eliminar</button>
-                        </td>
-                    </tr>
-                `;
-
-                $("#cuerpoestudiantes").html(html);
+        fetch(`../controllers/paciente.controller.php?action=${action}`, { // Ajusta la ruta si es necesario
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Respuesta del servidor:", data); // Mensaje de depuración
+            if (data.result === "ok") {
+                alert(idPaciente ? "Paciente actualizado con éxito" : "Paciente guardado con éxito");
+                $('#modalPaciente').modal('hide'); // Cierra el modal después de guardar
+                limpiarFormulario(); // Limpia el formulario después de guardar
+                listarPacientes(); // Recarga la lista de pacientes
             } else {
-                console.error("Estudiante no encontrado:", Estudiante);
-                cargaTabla();
+                alert("Error al guardar paciente: " + (data.message || "Error desconocido"));
             }
-        } catch (e) {
-            console.error("Error parsing JSON:", e);
-        }
+        })
+        .catch(error => console.error("Error en la petición:", error));
     });
-}
 
+    // Llamar a la función para listar pacientes
+    listarPacientes();
 
-// Guardar o editar un estudiante
-var guardar = (e) => {
-    e.preventDefault();
-
-    var frm_estudiantes = new FormData($("#frm_estudiantes")[0]);
-    console.log("Datos del formulario:", frm_estudiantes);
-
-    var ruta = "../controllers/estudiante.controller.php?op=insertar";
-    $.ajax({
-        url: ruta,
-        type: "POST",
-        data: frm_estudiantes,
-        contentType: false,
-        processData: false,
-        success: function (datos) {
-            console.log(datos);
-            $("#modalEstudiante").modal("hide");
-            location.reload();
-        },
-        error: function (xhr, status, error) {
-            console.error("Error al guardar el estudiante:", error);
-        }
+    // Añadir evento al botón de nuevo paciente
+    document.getElementById("nuevoPacienteBtn").addEventListener("click", function () {
+        limpiarFormulario(); // Limpiar el formulario antes de mostrar el modal
+        $('#modalPaciente').modal('show'); // Mostrar el modal de nuevo paciente
     });
-};
-
-// Editar un estudiante
-var editar = (e) => {
-    e.preventDefault();
-    var frm_editar_estudiantes = new FormData($("#frm_editar_estudiantes")[0]);
-    console.log("Datos del formulario:", frm_editar_estudiantes);
-    var ruta = "../controllers/estudiante.controller.php?op=actualizar";
-
-    $.ajax({
-        url: ruta,
-        type: "POST",
-        data: frm_editar_estudiantes,
-        processData: false,
-        contentType: false,
-        success: function (datos) {
-            console.log(datos);
-            location.reload();
-            $("#modalEditarEstudiante").modal("hide");
-        },
-        error: function (xhr, status, error) {
-            console.error("Error al actualizar:", error);
-        }
-    });
-};
-
-// Eliminar un estudiante
-var eliminar = (EstudiantesId) => {
-    Swal.fire({
-        title: "Estudiantes",
-        text: "¿Está seguro que desea eliminar el estudiante?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#d33",
-        cancelButtonColor: "#3085d6",
-        confirmButtonText: "Eliminar",
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                url: "../controllers/estudiante.controller.php?op=eliminar",
-                type: "POST",
-                data: { id_estudiante: EstudiantesId },
-                success: (resultado) => {
-                    console.log("Respuesta del servidor:", resultado);
-                    try {
-                        let response = JSON.parse(resultado);
-                        if (response === "Estudiante eliminado") {
-                            Swal.fire({
-                                title: "Estudiantes",
-                                text: "Se eliminó con éxito",
-                                icon: "success",
-                            });
-                            cargaTabla();
-                        }
-                    } catch (e) {
-                        Swal.fire({
-                            title: "Estudiantes",
-                            text: "No se pudo eliminar el estudiante debido a que ya está registrado en otra tabla",
-                            icon: "error",
-                        });
-                        console.error("Error al parsear JSON:", e);
-                    }
-                },
-                error: () => {
-                    Swal.fire({
-                        title: "Estudiantes", 
-                        text: "Ocurrió un error al intentar eliminar",
-                        icon: "error",
-                    });
-                }
-            });
-        }
-    });
-};
-
-init();
-
-// Inicialización
-function init() {
-    $("#frm_estudiantes").on("submit", function (e) {
-        guardar(e);
-    });
-    $("#frm_editar_estudiantes").on("submit", function (e) {
-        editar(e);
-    });
-}
-
-$(document).ready(() => {
-    cargaTabla();
 });
 
-// Cargar la tabla de estudiantes
-var cargaTabla = () => {
-    var html = "";
+// Función para limpiar el formulario
+function limpiarFormulario() {
+    document.getElementById('id_paciente').value = ''; // Limpia el campo oculto ID
+    document.getElementById('primer_nombre').value = '';
+    document.getElementById('segundo_nombre').value = '';
+    document.getElementById('apellido_paterno').value = '';
+    document.getElementById('apellido_materno').value = '';
+    document.getElementById('fecha_nacimiento').value = '';
+    document.getElementById('telefono').value = '';
+    document.getElementById('correo_electronico').value = '';
+    document.getElementById('direccion').value = '';
+}
 
-    $.get("../controllers/estudiante.controller.php?op=listar", (response) => {
-        let listaEstudiantes;
-        try {
-            listaEstudiantes = JSON.parse(response);
-        } catch (e) {
-            console.error("Error parsing JSON:", e);
-            return;
-        }
+// Función para listar pacientes
+function listarPacientes() {
+    fetch("../controllers/paciente.controller.php?action=listar") // Ajusta la ruta si es necesario
+        .then(response => response.json())
+        .then(data => {
+            console.log("Pacientes obtenidos:", data); // Verifica qué se recibe del servidor
+            const cuerpoPacientes = document.getElementById("cuerpoPacientes");
+            cuerpoPacientes.innerHTML = ""; // Limpia el contenido anterior
 
-        if (Array.isArray(listaEstudiantes)) {
-            $.each(listaEstudiantes, (indice, unEstudiante) => {
-                html += `
-                    <tr>
-                        <td>${indice + 1}</td>
-                        <td>${unEstudiante.id_estudiante}</td>
-                        <td>${unEstudiante.nombre}</td>
-                        <td>${unEstudiante.apellido}</td>
-                        <td>${unEstudiante.fecha_nacimiento}</td>
-                        <td>
-                            <button class="btn btn-primary" onclick="cargarEstudiante(${unEstudiante.id_estudiante})">Editar</button>
-                            <button class="btn btn-danger" onclick="eliminar(${unEstudiante.id_estudiante})">Eliminar</button>
-                        </td>
-                    </tr>
+            data.forEach((paciente, index) => {
+                const fila = document.createElement("tr");
+                fila.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${paciente.PRIMER_NOMBRE}</td>
+                    <td>${paciente.SEGUNDO_NOMBRE}</td>
+                    <td>${paciente.APELLIDO_PATERNO}</td>
+                    <td>${paciente.APELLIDO_MATERNO}</td>
+                    <td>${paciente.FECHA_NACIMIENTO}</td>
+                    <td>${paciente.TELEFONO}</td>
+                    <td>${paciente.CORREO_ELECTRONICO}</td>
+                    <td>${paciente.DIRECCION}</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="editarPaciente(${paciente.ID_PACIENTE})">Editar</button>
+                        <button class="btn btn-danger btn-sm" onclick="eliminarPaciente(${paciente.ID_PACIENTE})">Eliminar</button>
+                    </td>
                 `;
+                cuerpoPacientes.appendChild(fila);
             });
-            $("#cuerpoestudiantes").html(html);
-        } else {
-            console.error("Expected an array but got:", listaEstudiantes);
-        }
-    });
-};
+        })
+        .catch(error => console.error("Error al listar pacientes:", error));
+}
 
-// Cargar los datos de un estudiante en el formulario de edición
-var cargarEstudiante = (id_estudiante) => {
-    console.log("ID del estudiante:", id_estudiante);
-    $.get("../controllers/estudiante.controller.php?op=uno&id=" + id_estudiante, (data) => {
-        var Estudiante = JSON.parse(data);
-        console.log("Estudiante encontrado:", Estudiante);
-        $("#EditarEstudianteId").val(Estudiante.id_estudiante);
-        $("#NombreE").val(Estudiante.nombre);
-        $("#ApellidoE").val(Estudiante.apellido);
-        $("#FechaNacimientoE").val(Estudiante.fecha_nacimiento);
-        $("#modalEditarEstudiante").modal("show");
-    }).fail(function() {
-        Swal.fire({
-            title: "Estudiantes",
-            text: "Ocurrió un error al intentar obtener los datos del estudiante",
-            icon: "error",
-        });
-    });
-};
+// Función para editar un paciente
+function editarPaciente(id) {
+    fetch(`../controllers/paciente.controller.php?action=listar&id=${id}`)
+        .then(response => response.json())
+        .then(data => {
+            const paciente = data[0]; // Asegúrate de que obtienes el paciente correcto
+            document.getElementById('id_paciente').value = paciente.ID_PACIENTE;
+            document.getElementById('primer_nombre').value = paciente.PRIMER_NOMBRE;
+            document.getElementById('segundo_nombre').value = paciente.SEGUNDO_NOMBRE;
+            document.getElementById('apellido_paterno').value = paciente.APELLIDO_PATERNO;
+            document.getElementById('apellido_materno').value = paciente.APELLIDO_MATERNO;
+            document.getElementById('fecha_nacimiento').value = paciente.FECHA_NACIMIENTO;
+            document.getElementById('telefono').value = paciente.TELEFONO;
+            document.getElementById('correo_electronico').value = paciente.CORREO_ELECTRONICO;
+            document.getElementById('direccion').value = paciente.DIRECCION;
+            
+            $('#modalPaciente').modal('show'); // Mostrar el modal de edición
+        })
+        .catch(error => console.error("Error al obtener los datos del paciente:", error));
+}
 
-// Guardar o editar un estudiante
-var guardar = (e) => {
-    e.preventDefault();
-
-    var frm_estudiantes = new FormData($("#frm_estudiantes")[0]);
-    console.log("Datos del formulario:", frm_estudiantes);
-
-    var ruta = "../controllers/estudiante.controller.php?op=insertar";
-    $.ajax({
-        url: ruta,
-        type: "POST",
-        data: frm_estudiantes,
-        contentType: false,
-        processData: false,
-        success: function (datos) {
-            console.log(datos);
-            $("#modalEstudiante").modal("hide");
-            location.reload();
-        },
-        error: function (xhr, status, error) {
-            console.error("Error al guardar el estudiante:", error);
-        }
-    });
-};
-
-// Editar un estudiante
-var editar = (e) => {
-    e.preventDefault();
-    var frm_editar_estudiantes = new FormData($("#frm_editar_estudiantes")[0]);
-    console.log("Datos del formulario:", frm_editar_estudiantes);
-    var ruta = "../controllers/estudiante.controller.php?op=actualizar";
-
-    $.ajax({
-        url: ruta,
-        type: "POST",
-        data: frm_editar_estudiantes,
-        processData: false,
-        contentType: false,
-        success: function (datos) {
-            console.log(datos);
-            location.reload();
-            $("#modalEditarEstudiante").modal("hide");
-        },
-        error: function (xhr, status, error) {
-            console.error("Error al actualizar:", error);
-        }
-    });
-};
-
-// Eliminar un estudiante
-var eliminar = (EstudiantesId) => {
-    Swal.fire({
-        title: "Estudiantes",
-        text: "¿Está seguro que desea eliminar el estudiante?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#d33",
-        cancelButtonColor: "#3085d6",
-        confirmButtonText: "Eliminar",
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                url: "../controllers/estudiante.controller.php?op=eliminar",
-                type: "POST",
-                data: { id_estudiante: EstudiantesId },
-                success: (resultado) => {
-                    console.log("Respuesta del servidor:", resultado);
-                    try {
-                        let response = JSON.parse(resultado);
-                        if (response === "Estudiante eliminado") {
-                            Swal.fire({
-                                title: "Estudiantes",
-                                text: "Se eliminó con éxito",
-                                icon: "success",
-                            });
-                            cargaTabla();
-                        }
-                    } catch (e) {
-                        Swal.fire({
-                            title: "Estudiantes",
-                            text: "No se pudo eliminar el estudiante debido a que ya está siendo utilizado en INSCRIPCION",
-                            icon: "error",
-                        });
-                        console.error("Error al parsear JSON:", e);
-                    }
-                },
-                error: () => {
-                    Swal.fire({
-                        title: "Estudiantes", 
-                        text: "Ocurrió un error al intentar eliminar",
-                        icon: "error",
-                    });
-                }
-            });
-        }
-    });
-};
-
-init();
+// Función para eliminar un paciente
+function eliminarPaciente(id) {
+    if (confirm("¿Estás seguro de que deseas eliminar este paciente?")) {
+        fetch("../controllers/paciente.controller.php?action=deletePaciente", {
+            method: "POST",
+            body: new URLSearchParams({ id_paciente: id })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.result === "ok") {
+                alert("Paciente eliminado con éxito");
+                listarPacientes(); // Actualiza la lista de pacientes
+            } else {
+                alert("Error al eliminar el paciente");
+            }
+        })
+        .catch(error => console.error("Error al eliminar el paciente:", error));
+    }
+}

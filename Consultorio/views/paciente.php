@@ -32,11 +32,9 @@
         </div>
         <!-- Spinner End -->
 
-
         <!-- Sidebar Start -->
         <?php require_once('./html/menu.php') ?>
         <!-- Sidebar End -->
-
 
         <!-- Content Start -->
         <div class='content'>
@@ -44,35 +42,49 @@
             <?php require_once('./html/header.php') ?>
             <!-- Navbar End -->
 
-
-            <!-- Nuevo Estudiante Modal -->
-            <div class="modal fade" id="modalEstudiante" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <!-- Nuevo Paciente Modal -->
+            <div class="modal fade" id="modalPaciente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Nuevo Pacientes</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Nuevo Paciente</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form id="frm_estudiantes">
+                        <form id="frm_paciente">
+                            <input type="hidden" id="id_paciente" name="id_paciente"> <!-- Campo oculto para el ID -->
                             <div class="modal-body">
-                                <!-- <input type="hidden" name="EstudiantesId" id="EstudiantesId"> -->
-
                                 <div class="form-group">
-                                    <label for="Nombre">Identificacion</label>
-                                    <input type="text" name="EstudiantesId" id="EstudiantesId" placeholder="Ingrese el nombre del estudiante" class="form-control" required>
+                                    <label for="PRIMER_NOMBRE">Primer Nombre</label>
+                                    <input type="text" name="primer_nombre" id="primer_nombre" placeholder="Ingrese el primer nombre del paciente" class="form-control" required>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="Nombre">Nombre</label>
-                                    <input type="text" name="Nombre" id="Nombre" placeholder="Ingrese el nombre del estudiante" class="form-control" required>
+                                    <label for="SEGUNDO_NOMBRE">Segundo Nombre</label>
+                                    <input type="text" name="segundo_nombre" id="segundo_nombre" placeholder="Ingrese el segundo nombre del paciente" class="form-control">
                                 </div>
                                 <div class="form-group">
-                                    <label for="Apellido">Apellido</label>
-                                    <input type="text" name="Apellido" id="Apellido" placeholder="Ingrese el apellido del estudiante" class="form-control" required>
+                                    <label for="APELLIDO_PATERNO">Apellido Paterno</label>
+                                    <input type="text" name="apellido_paterno" id="apellido_paterno" placeholder="Ingrese el apellido paterno del paciente" class="form-control" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="FechaNacimiento">Fecha Nacimiento</label>
-                                    <input type="date" name="FechaNacimiento" id="FechaNacimiento" placeholder="Ingrese la fecha de nacimiento del estudiante" class="form-control" required>
+                                    <label for="APELLIDO_MATERNO">Apellido Materno</label>
+                                    <input type="text" name="apellido_materno" id="apellido_materno" placeholder="Ingrese el apellido materno del paciente" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="FECHA_NACIMIENTO">Fecha de Nacimiento</label>
+                                    <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" placeholder="Ingrese la fecha de nacimiento del paciente" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="TELEFONO">Teléfono</label>
+                                    <input type="text" name="telefono" id="telefono" placeholder="Ingrese el teléfono del paciente" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="CORREO_ELECTRONICO">Correo Electrónico</label>
+                                    <input type="email" name="correo_electronico" id="correo_electronico" placeholder="Ingrese el correo electrónico del paciente" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="DIRECCION">Dirección</label>
+                                    <input type="text" name="direccion" id="direccion" placeholder="Ingrese la dirección del paciente" class="form-control">
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -83,57 +95,22 @@
                     </div>
                 </div>
             </div>
-            <!-- Fin Nuevo Estudiante Modal -->
+            <!-- Fin Nuevo Paciente Modal -->
 
-            <!-- Editar Estudiante Modal -->
-            <div class="modal fade" id="modalEditarEstudiante" tabindex="-1" aria-labelledby="editarEstudianteLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="editarEstudianteLabel">Editar Estudiante</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <form id="frm_editar_estudiantes">
-                            <div class="modal-body">
-                                <input type="hidden" name="EditarEstudianteId" id="EditarEstudianteId">
-
-                                <div class="form-group">
-                                    <label for="NombreE">Nombre</label>
-                                    <input type="text" name="NombreE" id="NombreE" placeholder="Ingrese el nombre del estudiante" class="form-control" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="ApellidoE">Apellido</label>
-                                    <input type="text" name="ApellidoE" id="ApellidoE" placeholder="Ingrese el apellido del estudiante" class="form-control" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="FechaNacimientoE">Fecha Nacimiento</label>
-                                    <input type="date" name="FechaNacimientoE" id="FechaNacimientoE" placeholder="Ingrese la fecha de nacimiento del estudiante" class="form-control" required>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Actualizar</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <!-- Fin Editar Estudiante Modal -->
-
-            <!-- Lista de Productos -->
+            <!-- Lista de Pacientes -->
             <div class='container-fluid pt-4 px-3'>
                 <div class="container d-flex flex-row justify-content-start">
                     <div>
-                        <button type="button" class="btn btn-primary mb-4 mx-2" data-bs-toggle="modal" data-bs-target="#modalEstudiante">
+                        <button type="button" class="btn btn-primary mb-4 mx-2" data-bs-toggle="modal" data-bs-target="#modalPaciente">
                             <i class="bi bi-person-check"></i> Nuevo Paciente
                         </button>
                     </div>
                     <div>
-                        <input onkeydown="if (event.keyCode === 13) buscarEstudiante(this.value)" style="width: 25rem;" type="text" id="buscarEstudiante" class="form-control mb-4 mx-3" placeholder="Buscar Paciente">
+                        <input onkeydown="if (event.keyCode === 13) buscarPaciente(this.value)" style="width: 25rem;" type="text" id="buscarPaciente" class="form-control mb-4 mx-3" placeholder="Buscar Paciente">
                     </div>
                 </div>
 
-                <h6 style="text-align: center; color: #FFFFFF;" class='mb-4'> Lista de Pacientes</h6>
+                <h6 style="text-align: center;" class='mb-4'>Lista de Pacientes</h6>
                 <div class='d-flex align-items-center justify-content-between mb-4'>
                     <table class="table table-bordered table-striped table-hover table-responsive">
                         <thead class="table-light">
@@ -144,24 +121,19 @@
                                 <th>Apellido Paterno</th>
                                 <th>Apellido Materno</th>
                                 <th>Nacimiento</th>
-                                <th>Telefono</th>
+                                <th>Teléfono</th>
                                 <th>Correo</th>
-                                <th>Direccion</th>
+                                <th>Dirección</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody id="cuerpoestudiantes">
-                            <!-- Aquí van los datos de los productos -->
+                        <tbody id="cuerpoPacientes">
+                            <!-- Aquí van los datos de los pacientes -->
                         </tbody>
                     </table>
                 </div>
             </div>
-            <!-- Fin Lista de Productos -->
-
-
-            <!-- Widgets Start -->
-            <!-- Aquí podrías agregar widgets relacionados con productos si lo deseas -->
-            <!-- Widgets End -->
-
+            <!-- Fin Lista de Pacientes -->
 
             <!-- Footer Start -->
             <?php require_once('./html/footer.php') ?>
@@ -169,15 +141,13 @@
         </div>
         <!-- Content End -->
 
-
         <!-- Back to Top -->
         <a href='#' class='btn btn-lg btn-primary btn-lg-square back-to-top'><i class='bi bi-arrow-up'></i></a>
     </div>
 
-
     <!-- JavaScript Libraries -->
-    <?php require_once('./html/scripts.php') ?>
-    <script src="paciente.js"></script>
+    <?php require_once('../views/html/scripts.php') ?>
+    <script src="../views/paciente.js" defer></script>
 
 </body>
 

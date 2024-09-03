@@ -23,7 +23,7 @@
             <a href='recepcionista.php' class='nav-item nav-link'><i class='fa fa-th me-2'></i>Recepcionista</a>
             <a href='tratamiento.php' class='nav-item nav-link'><i class='fa fa-th me-2'></i>Tratamiento</a>
             <a href='aula.php' class='nav-item nav-link'><i class='fa fa-th me-2'></i>Consulta</a>
-            <a href='inscripcion.php' class='nav-item nav-link'><i class='fa fa-th me-2'></i>Cita</a>
+            <a href='cita.php' class='nav-item nav-link'><i class='fa fa-th me-2'></i>Cita</a>
             <a href='clase.php' class='nav-item nav-link'><i class='fa fa-th me-2'></i>Historial Medico</a>
 
         </div>
