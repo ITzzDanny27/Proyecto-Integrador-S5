@@ -47,7 +47,6 @@ class Clase_Tratamiento {
         $con->close();
 
         return $respuesta;
-        }
     }
 
 
@@ -109,6 +108,3 @@ class Clase_Tratamiento {
     //     $con->close();
     //     return $datos;
     // }
-
-}
-?>
