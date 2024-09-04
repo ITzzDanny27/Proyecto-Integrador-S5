@@ -20,7 +20,36 @@ switch($_GET["op"]){
             echo json_encode(array("message" => "Falta el ID del tratamiento"));
         }
     break;
-    
+
+    case "listar":
+        $ListaTratamiento = array();
+        $dato = $tratamiento->listarTratamiento();
+
+        while ($fila = mysqli_fetch_assoc($dato)) {
+            $ListaTratamiento[] = $fila;
+        }
+
+        if (!empty($ListaTratamiento)) {
+            echo json_encode($ListaTratamiento);
+        } else {
+            echo json_encode(array("message" => "No hay tratamientos"));
+        }
+
+    break;
+
+    case "insertar":
+        $descripcion = $_POST["Descripcion"] ?? null;
+        $costo = $_POST["Costo"] ?? null;
+        $duracion = $_POST["Duracion"] ?? null;
+
+        if (!empty($descripcion) && !empty($costo) && !empty($duracion)) {
+            $insertar = $tratamiento->insertarTratamiento($descripcion, $costo, $duracion);
+            echo json_encode($insertar);
+        } else {
+            echo json_encode("Faltan Datos");
+        }
+    break;
+
     case "actualizar" :
         $ID_TRATAMIENTO = $_POST["ID_TRATAMIENTO"] ?? null;
         $descripcion = $_POST["Descripcion"] ?? null;
