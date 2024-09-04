@@ -51,7 +51,7 @@
             <!-- Navbar End -->
 
 
-            <!-- Nuevo Clase Modal -->
+            <!-- Nuevo Tratamiento Modal -->
             <div class="modal fade" id="modalTratamiento" tabindex="-1" aria-labelledby="exampleModalLabel"
                 aria-hidden="true">
                 <div class="modal-dialog">
@@ -89,42 +89,47 @@
                     </div>
                 </div>
             </div>
-            <!-- Fin Nuevo Clase Modal -->
+            <!-- Fin Nuevo Tratamiento Modal -->
 
-            <!-- Editar Clase Modal -->
-            <!-- <div class="modal fade" id="modalEditarClase" tabindex="-1" aria-labelledby="editarClaseLabel"
+            <!-- Editar Tratamiento Modal -->
+            <div class="modal fade" id="modalEditarTratamiento" tabindex="-1" aria-labelledby="exampleModalLabel"
                 aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="editarClaseLabel">Editar Clase</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Editar tratamiento</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form id="frm_editar_clase">
+                        <form id="frm_EditarTratamiento">
                             <div class="modal-body">
-                                <input type="hidden" name="EditarClaseId" id="EditarClaseId">
-
-                                <div class="form-group">
-                                    <label for="Nombre">Nombre</label>
-                                    <input type="text" name="NombreE" id="NombreE" placeholder="Ingrese el nombre de la clase" class="form-control" required>
-                                </div>
+                                <input type="hidden" name="TratamientoIdE" id="TratamientoIdE">
 
                                 <div class="form-group">
                                     <label for="Descripcion">Descripción</label>
-                                    <input type="text" name="DescripcionE" id="DescripcionE" placeholder="Ingrese la Descripcion del curso" class="form-control" required>
+                                    <input type="text" name="DescripcionE" id="DescripcionE" placeholder="Ingrese la descripcion del tratamiento" class="form-control" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="Costo">Costo</label>
+                                    <input type="text" name="CostoE" id="CostoE" placeholder="Ingrese el costo del tratamiento" class="form-control" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="Duracion">Duracion</label>
+                                    <input type="text" name="DuracionE" id="DuracionE" placeholder="Ingrese la duracion del tratamiento" class="form-control" required>
                                 </div>
 
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Actualizar</button>
+                                <button type="submit" class="btn btn-primary">Guardar</button>
                                 <button type="button" class="btn btn-secondary"
                                     data-bs-dismiss="modal">Cancelar</button>
                             </div>
                         </form>
                     </div>
                 </div>
-            </div> -->
-            <!-- Fin Editar Clase Modal -->
+            </div>
+            <!-- Fin Editar Tratamiento Modal -->
 
             <!-- Lista de Clase -->
             <div class='container-fluid pt-4 px-4'>

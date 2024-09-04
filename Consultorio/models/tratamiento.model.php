@@ -52,61 +52,61 @@ class Clase_Tratamiento {
         $con->close();
 
         return $respuesta;
-    }
-}
-
-    public function actualizarTratamiento($ID_TRATAMIENTO, $DESCRIPCION, $COSTO, $DURACION) {
-        $conexion = new Clase_Conectar();
-        $con = $conexion->conectar();
-
-        $sql = "UPDATE tratamiento SET DESCRIPCION = ?, COSTO = ?, DURACION = ? WHERE ID_TRATAMIENTO = ?";
-
-        $stmt = $con->prepare($sql);
-        $stmt->bind_param("ssdi", $DESCRIPCION, $COSTO, $DURACION, $ID_TRATAMIENTO);
-
-        $resultado = $stmt->execute();
-
-        if ($resultado) {
-            $respuesta = array("message" => "Tratamiento actualizado correctamente");
-        } else {
-            $respuesta = array("message" => "Error al actualizar el tratamiento: " . $stmt->error);
         }
-
-        $stmt->close();
-        $con->close();
-
-        return $respuesta;
     }
 
-    public function eliminarTratamiento($ID_TRATAMIENTO) {
-        $conexion = new Clase_Conectar();
-        $con = $conexion->conectar();
+    // public function actualizarTratamiento($ID_TRATAMIENTO, $DESCRIPCION, $COSTO, $DURACION) {
+    //     $conexion = new Clase_Conectar();
+    //     $con = $conexion->conectar();
 
-        $sql = "DELETE FROM tratamiento WHERE ID_TRATAMIENTO = ?";
+    //     $sql = "UPDATE tratamiento SET DESCRIPCION = ?, COSTO = ?, DURACION = ? WHERE ID_TRATAMIENTO = ?";
+
+    //     $stmt = $con->prepare($sql);
+    //     $stmt->bind_param("ssdi", $DESCRIPCION, $COSTO, $DURACION, $ID_TRATAMIENTO);
+
+    //     $resultado = $stmt->execute();
+
+    //     if ($resultado) {
+    //         $respuesta = array("message" => "Tratamiento actualizado correctamente");
+    //     } else {
+    //         $respuesta = array("message" => "Error al actualizar el tratamiento: " . $stmt->error);
+    //     }
+
+    //     $stmt->close();
+    //     $con->close();
+
+    //     return $respuesta;
+    // }
+
+    // public function eliminarTratamiento($ID_TRATAMIENTO) {
+    //     $conexion = new Clase_Conectar();
+    //     $con = $conexion->conectar();
+
+    //     $sql = "DELETE FROM tratamiento WHERE ID_TRATAMIENTO = ?";
         
-        $stmt = $con->prepare($sql);
-        $stmt->bind_param("i", $ID_TRATAMIENTO);
+    //     $stmt = $con->prepare($sql);
+    //     $stmt->bind_param("i", $ID_TRATAMIENTO);
 
-        $resultado = $stmt->execute();
+    //     $resultado = $stmt->execute();
 
-        if ($resultado) {
-            $respuesta = array("message" => "Tratamiento eliminado correctamente");
-        } else {
-            $respuesta = array("message" => "Error al eliminar el tratamiento: " . $stmt->error);
-        }
+    //     if ($resultado) {
+    //         $respuesta = array("message" => "Tratamiento eliminado correctamente");
+    //     } else {
+    //         $respuesta = array("message" => "Error al eliminar el tratamiento: " . $stmt->error);
+    //     }
 
-        $stmt->close();
-        $con->close();
+    //     $stmt->close();
+    //     $con->close();
 
-        return $respuesta;
-    }
+    //     return $respuesta;
+    // }
 
-    public function listarComboTratamiento() {
-        $conexion = new Clase_Conectar();
-        $con = $conexion->conectar();
-        $sql = "SELECT ID_TRATAMIENTO, DESCRIPCION FROM tratamiento";
+    // public function listarComboTratamiento() {
+    //     $conexion = new Clase_Conectar();
+    //     $con = $conexion->conectar();
+    //     $sql = "SELECT ID_TRATAMIENTO, DESCRIPCION FROM tratamiento";
         
-        $datos = mysqli_query($con, $sql);
-        $con->close();
-        return $datos;
-    }
+    //     $datos = mysqli_query($con, $sql);
+    //     $con->close();
+    //     return $datos;
+    // }
