@@ -33,7 +33,7 @@ class Clase_Tratamiento {
         $sql = "INSERT INTO tratamiento (DESCRIPCION, COSTO, DURACION) VALUES (?, ?, ?)";
         
         $stmt = $con->prepare($sql);
-        $stmt->bind_param("ssd", $DESCRIPCION, $DURACION, $COSTO);
+        $stmt->bind_param("sds", $DESCRIPCION, $COSTO, $DURACION);
 
         $resultado = $stmt->execute();
 

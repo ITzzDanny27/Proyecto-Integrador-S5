@@ -43,7 +43,7 @@ switch($_GET["op"]){
         $duracion = $_POST["Duracion"] ?? null;
 
         if (!empty($descripcion) && !empty($costo) && !empty($duracion)) {
-            $insertar = $tratamiento->insertarTratamiento($descripcion, $costo, $duracion);
+            $insertar = $tratamiento->registrarTratamiento($descripcion, $costo, $duracion);
             echo json_encode($insertar);
         } else {
             echo json_encode("Faltan Datos");

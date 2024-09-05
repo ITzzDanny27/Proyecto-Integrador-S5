@@ -3,13 +3,18 @@ function init() {
     $("#frm_tratamiento").on("submit", function (e) {
         guardar(e);
     });
+
+    $("#frm_EditarTratamiento").on("submit", function (e) {
+        editar(e);
+    });
+
 }
 
 $(document).ready(() => {
     cargaTabla();
 });
 
-// Cargar la tabla de clases
+// Cargar la tabla de tratamientos
 var cargaTabla = () => {
     var html = "";
 
@@ -31,7 +36,7 @@ var cargaTabla = () => {
                         <td>${unTratamiento.COSTO}</td>
                         <td>${unTratamiento.DURACION}</td>
                         <td>
-                            <button class="btn btn-primary" onclick="cargarClase(${unTratamiento.ID_TRATAMIENTO})">Editar</button>
+                            <button class="btn btn-primary" onclick="cargarTratamiento(${unTratamiento.ID_TRATAMIENTO})">Editar</button>
                             <button class="btn btn-danger" onclick="eliminar(${unTratamiento.ID_TRATAMIENTO})">Eliminar</button>
                         </td>
                     </tr>
@@ -44,23 +49,23 @@ var cargaTabla = () => {
     });
 };
 
+// Cargar datos de un tratamiento en el formulario de edición
+var cargarTratamiento = (TratamientoId) => {
+    $.get("../controllers/tratamiento.controller.php?op=uno&id=" + TratamientoId, (data) => {
+        var tratamiento = JSON.parse(data);
+        console.log("Tratamiento encontrado:", tratamiento);
+        $("#TratamientoIdE").val(tratamiento.ID_TRATAMIENTO);
+        $("#DescripcionE").val(tratamiento.DESCRIPCION);
+        $("#CostoE").val(tratamiento.COSTO);
+        $("#DuracionE").val(tratamiento.DURACION);
+        $("#modalEditarTratamiento").modal("show");
+    }).fail(function() {
+        console.error("Error al obtener los datos del tratamiento");
+    });
+}
 
-// var cargarClase = (id_clase) => {
-//     $.get("../controllers/clase.controller.php?op=uno&id=" + id_clase, (data) => {
-//         var Clase = JSON.parse(data);
-//         console.log("Clase encontrada:", Clase);
-//         $("#EditarClaseId").val(Clase.id_clase);
-//         $("#EditarClaseCurso").val(Clase.nombre_curso);
-//         $("#EditarClaseProfesor").val(Clase.id_profesor);
-//         $("#EditarClaseAula").val(Clase.numero_aula);
-//         $("#EditarClaseHorario").val(Clase.horario);
-//         $("#modalEditarClase").modal("show");
-//     });
-// }
-
-
+// Guardar un tratamiento
 var guardar = (e) => {
-    
     e.preventDefault();
 
     var frm_tratamiento = new FormData($("#frm_tratamiento")[0]);
@@ -80,9 +85,84 @@ var guardar = (e) => {
             $("#modalTratamiento").modal("hide");
         },
         error: function (xhr, status, error) {
-            console.error("Error al guardar:", error);
+            console.error("Error al guardar el tratamiento:", error);
         }
     });
 }
+
+// Editar un tratamiento
+var editar = (e) => {
+    e.preventDefault();
+
+    var frm_EditarTratamiento = new FormData($("#frm_EditarTratamiento")[0]);
+    console.log("Datos del formulario de edición:", frm_EditarTratamiento);
+
+    var ruta = "../controllers/tratamiento.controller.php?op=actualizar";
+
+    $.ajax({
+        url: ruta,
+        type: "POST",
+        data: frm_EditarTratamiento,
+        contentType: false,
+        processData: false,
+        success: function (datos) {
+            console.log(datos);
+            location.reload();
+            $("#modalEditarTratamiento").modal("hide");
+        },
+        error: function (xhr, status, error) {
+            console.error("Error al editar el tratamiento:", error);
+        }
+    });
+}
+
+// Eliminar un tratamiento
+var eliminar = (TratamientoId) => {
+    Swal.fire({
+        title: "Tratamiento",
+        text: "¿Está seguro que desea eliminar el tratamiento?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Eliminar",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "../controllers/tratamiento.controller.php?op=eliminar",
+                type: "POST",
+                data: { ID_TRATAMIENTO: TratamientoId },
+                success: (resultado) => {
+                    console.log("Respuesta del servidor:", resultado);
+                    try {
+                        let response = JSON.parse(resultado);
+                        if (response === "Tratamiento eliminado") {
+                            Swal.fire({
+                                title: "Tratamiento",
+                                text: "Se eliminó con éxito",
+                                icon: "success",
+                            });
+                            cargaTabla();
+                        }location.reload();
+                    } catch (e) {
+                        Swal.fire({
+                            title: "Tratamiento",
+                            text: "No se pudo eliminar el tratamiento debido a que ya está registrado en otra tabla",
+                            icon: "error",
+                        });
+                        console.error("Error al parsear JSON:", e);
+                    }
+                },
+                error: () => {
+                    Swal.fire({
+                        title: "Tratamiento", 
+                        text: "Ocurrió un error al intentar eliminar",
+                        icon: "error",
+                    });
+                }
+            });
+        }
+    });
+};
 
 init();
