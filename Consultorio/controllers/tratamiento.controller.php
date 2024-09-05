@@ -7,7 +7,7 @@ $metodo = $_SERVER['REQUEST_METHOD'];
 switch($_GET["op"]){
 
     case "uno":
-        $ID_TRATAMIENTO = $_GET["ID_TRATAMIENTO"] ?? null;
+        $ID_TRATAMIENTO = $_GET["id"] ?? null;
         if (!empty($ID_TRATAMIENTO)) {
             $dato = $tratamiento->uno($ID_TRATAMIENTO);
             $fila = mysqli_fetch_assoc($dato);
@@ -51,10 +51,10 @@ switch($_GET["op"]){
     break;
 
     case "actualizar" :
-        $ID_TRATAMIENTO = $_POST["ID_TRATAMIENTO"] ?? null;
-        $descripcion = $_POST["Descripcion"] ?? null;
-        $costo = $_POST["Costo"] ?? null;
-        $duracion = $_POST["Duracion"] ?? null;
+        $ID_TRATAMIENTO = $_POST["TratamientoIdE"] ?? null;
+        $descripcion = $_POST["DescripcionE"] ?? null;
+        $costo = $_POST["CostoE"] ?? null;
+        $duracion = $_POST["DuracionE"] ?? null;
 
         if (!empty($ID_TRATAMIENTO) && !empty($descripcion) && !empty($costo) && !empty($duracion)) {
             $actualizar = $tratamiento->actualizarTratamiento($ID_TRATAMIENTO, $descripcion, $costo, $duracion);

@@ -56,7 +56,7 @@ class Clase_Tratamiento {
         $sql = "UPDATE tratamiento SET DESCRIPCION = ?, COSTO = ?, DURACION = ? WHERE ID_TRATAMIENTO = ?";
 
         $stmt = $con->prepare($sql);
-        $stmt->bind_param("ssdi", $DESCRIPCION, $COSTO, $DURACION, $ID_TRATAMIENTO);
+        $stmt->bind_param("sdsi", $DESCRIPCION, $COSTO, $DURACION, $ID_TRATAMIENTO);
 
         $resultado = $stmt->execute();
 
