@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <h3>Ingreso</h3>
                         </div>
 
-                        <form method="post" action="./controllers/recepcionista.controller.php?op=login">
+                        <form method="post" action="./controllers/login.controller.php?op=login">
                             <?php
                             if (isset($_GET['op'])) {
                                 switch ($_GET['op']) {
