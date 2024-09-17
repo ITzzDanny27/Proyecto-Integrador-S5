@@ -2,6 +2,7 @@
 
 require_once('../config/cors.php');
 require_once('../models/login.model.php');
+session_start(); // Iniciar la sesión
 
 $usuario = new Clase_Usuarios();
 $metodo = $_SERVER['REQUEST_METHOD'];
@@ -15,20 +16,34 @@ switch ($_GET["op"]) {
         if (!empty($correo) && !empty($password)) {
             $login = $usuario->loginParametros($correo, $password);
             $res = mysqli_fetch_assoc($login);
+
             if ($res) {
+                // Verifica la contraseña (esto ya lo haces en tu código)
                 if ($res['PASSWORD'] == $password) {
-                    header('Location: ../views/paciente.php');
+                    // Iniciar la sesión y almacenar los datos del usuario
+                    $_SESSION['usuario_id'] = $res['ID_RECEPCIONISTA'] ?? $res['ID_ADMIN'];
+                    $_SESSION['usuario_rol'] = $res['rol'];
+                    $_SESSION['usuario_nombre'] = $res['NOMBRE'];
+
+                    // Redireccionar según el rol
+                    if ($res['rol'] == 'recepcionista') {
+                        header('Location: ../views/cita.php');
+                    } elseif ($res['rol'] == 'admin') {
+                        header('Location: ../views/paciente.php');
+                    } else {
+                        header('Location: ../index.php?op=4'); // Rol no reconocido
+                    }
                     exit();
                 } else {
-                    header('Location: ../index.php?op=3');
+                    header('Location: ../index.php?op=3'); // Contraseña incorrecta
                     exit();
                 }
             } else {
-                header('Location: ../index.php?op=1');
+                header('Location: ../index.php?op=1'); // Usuario no encontrado
                 exit();
             }
         } else {
-            header('Location: ../index.php?op=2');
+            header('Location: ../index.php?op=2'); // Faltan datos
             exit();
         }
         break;

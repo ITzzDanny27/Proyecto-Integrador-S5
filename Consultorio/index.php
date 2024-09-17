@@ -1,9 +1,3 @@
-<?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    header("Location: ../Consultorio/views/paciente.php");
-    exit();
-}
-?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -58,44 +52,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             if (isset($_GET['op'])) {
                                 switch ($_GET['op']) {
                                     case '1':
-                            ?>
-                                        <div class="form-group">
-                                            <div class="alert alert-danger">
-                                                El usuario o la contraseña son incorrectos, intente de nuevo
-                                            </div>
-                                        </div>
-                                    <?php
+                                        echo '<div class="alert alert-danger">El usuario o la contraseña son incorrectos, intente de nuevo</div>';
                                         break;
                                     case '2':
-                                    ?>
-                                        <div class="form-group">
-                                            <div class="alert alert-danger">
-                                                Complete las carillas
-                                            </div>
-                                        </div>
-                            <?php
+                                        echo '<div class="alert alert-danger">Complete las carillas</div>';
+                                        break;
                                 }
                             }
                             ?>
 
-
                             <div class="form-floating mb-3">
                                 <input required type="text" class="form-control" id="CORREO_ELECTRONICO" name="CORREO_ELECTRONICO" placeholder="Ingrese su usuario o correo" autofocus />
-                                <label for="email">Usuario o Correo</label>
+                                <label for="CORREO_ELECTRONICO">Usuario o Correo</label>
                             </div>
                             <div class="form-floating mb-4">
                                 <input required type="password" id="PASSWORD" name="PASSWORD" class="form-control" placeholder="Contraseña" />
-                                <label for="contrasenia">Contraseña</label>
+                                <label for="PASSWORD">Contraseña</label>
                             </div>
 
-                            <div class="form-floating mb-5">
-                                <input required type="rol" id="rol" name="rol" class="form-control" placeholder="Seleccione su rol" />
+                            <!-- Eliminamos el campo de rol o cambiamos por un select si es necesario -->
+                            <div class="form-floating mb-4">
+                                <select id="rol" name="rol" class="form-control">
+                                    <option value="" disabled selected>Seleccione su rol</option>
+                                    <option value="recepcionista">Recepcionista</option>
+                                    <option value="admin">Admin</option>
+                                </select>
                                 <label for="rol">Rol</label>
                             </div>
 
                             <div class="mb-3">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="remember-me" />Recuerdame
+                                    <input class="form-check-input" type="checkbox" id="remember-me" />
+                                    <label class="form-check-label" for="remember-me">Recuérdame</label>
                                 </div>
                             </div>
 

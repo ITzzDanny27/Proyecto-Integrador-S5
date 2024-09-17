@@ -4,38 +4,38 @@ require_once('../config/conexion.php');
 class Clase_Usuarios
 {
 
-    public function login($CORREO_ELECTRONICO, $PASSWORD)
-    {
-        $con = new Clase_Conectar();
-        $con = $con->Procedimiento_Conectar();
-        $cadena = "SELECT * FROM `recepcionista` WHERE `CORREO_ELECTRONICO`='$CORREO_ELECTRONICO' AND `PASSWORD`='$PASSWORD'";
-        $todos = mysqli_query($con, $cadena);
-        $con->close();
-        return $todos;
-    }
+    public function loginParametros($CORREO_ELECTRONICO, $PASSWORD)
+{
+    $con = new Clase_Conectar();
+    $con = $con->Procedimiento_Conectar();
 
-    public function loginCorreo($CORREO_ELECTRONICO)
-    {
-        $con = new Clase_Conectar();
-        $con = $con->Procedimiento_Conectar();
-        $cadena = "SELECT * FROM `recepcionista` WHERE `CORREO_ELECTRONICO`='$CORREO_ELECTRONICO'";
-        $todos = mysqli_query($con, $cadena);
-        $con->close();
-        return $todos;
-    }
+    // Consulta en la tabla recepcionista
+    $cadena = "SELECT *, 'recepcionista' as rol FROM `recepcionista` WHERE `CORREO_ELECTRONICO`=? AND `PASSWORD`=?";
+    $stmt = $con->prepare($cadena);
+    $stmt->bind_param('ss', $CORREO_ELECTRONICO, $PASSWORD);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    public function loginParametros($CORREO_ELECTRONICO, $PASSWORD) // mayor seguridad
-    {
-        $con = new Clase_Conectar();
-        $con = $con->Procedimiento_Conectar();
-        $cadena = "SELECT * FROM `recepcionista` WHERE `CORREO_ELECTRONICO`=? AND `PASSWORD`=?";
-        $stmt = $con->prepare($cadena);
-        $stmt->bind_param('ss', $CORREO_ELECTRONICO, $PASSWORD);
-        if ($stmt->execute()) {
-            $result = $stmt->get_result();
-            return $result;
+    // Si no encuentra resultados en recepcionista, busca en admin
+    if ($result->num_rows == 0) {
+        $cadenaAdmin = "SELECT *, 'admin' as rol FROM `admin` WHERE `CORREO_ELECTRONICO`=? AND `PASSWORD`=?";
+        $stmtAdmin = $con->prepare($cadenaAdmin);
+        $stmtAdmin->bind_param('ss', $CORREO_ELECTRONICO, $PASSWORD);
+        $stmtAdmin->execute();
+        $resultAdmin = $stmtAdmin->get_result();
+
+        // Si encuentra en admin, retornamos el resultado de admin
+        if ($resultAdmin->num_rows > 0) {
+            $con->close();
+            return $resultAdmin;
         }
     }
+
+    // Si encontró en recepcionista o no encontró en admin, devolvemos el resultado original
+    $con->close();
+    return $result;
+}
+
 
     // // Procedimiento para obtener todos los recepcionistas de la base de datos
     // public function todos()  // select * from recepcionista;

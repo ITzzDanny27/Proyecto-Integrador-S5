@@ -142,9 +142,9 @@
                         <thead class="table-light">
                             <tr>
                                 <th>#</th>
-                                <th>Descripcion</th>
+                                <th>Nombre de Tratamiento</th>
                                 <th>Costo</th>
-                                <th>Duracion</th>
+                                <th>Duración del tratamiento</th>
 
                             </tr>
                         </thead>
