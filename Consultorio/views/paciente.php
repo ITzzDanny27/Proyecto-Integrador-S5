@@ -42,6 +42,13 @@
             <?php require_once('./html/header.php') ?>
             <!-- Navbar End -->
 
+            <?php
+            if (isset($_SESSION['mensaje'])) {
+                echo '<div class="alert alert-info" role="alert">' . $_SESSION['mensaje'] . '</div>';
+                unset($_SESSION['mensaje']); // Eliminar el mensaje después de mostrarlo
+            }
+            ?>
+
             <!-- Nuevo Paciente Modal -->
             <div class="modal fade" id="modalPaciente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -106,8 +113,7 @@
                         </button>
                     </div>
                     <div>
-                        <input onkeydown="if (event.keyCode === 13) buscarPaciente(this.value)" style="width: 25rem;" type="text" id="buscarPaciente" class="form-control mb-4 mx-3" placeholder="Buscar Paciente">
-                    </div>
+                        <input oninput="buscarPaciente(this.value)" style="width: 25rem;" type="text" id="buscarPaciente" class="form-control mb-4 mx-3" placeholder="Buscar Paciente">                    </div>
                 </div>
 
                 <h6 style="text-align: center;" class='mb-4'>Lista de Pacientes</h6>

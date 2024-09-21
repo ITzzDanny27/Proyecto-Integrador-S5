@@ -115,3 +115,50 @@ function eliminarRecepcionista(id) {
         .catch(error => console.error("Error al eliminar el recepcionista:", error));
     }
 }
+
+// Función para buscar recepcionistas en tiempo real
+function buscarRecepcionista(query) {
+    const filter = query.toLowerCase();
+    const filas = document.getElementById("cuerpoRecepcionistas").getElementsByTagName("tr");
+
+    for (let i = 0; i < filas.length; i++) {
+        const nombreRecepcionista = filas[i].getElementsByTagName("td")[1]; // Ajusta al índice de la columna de nombre en tu tabla
+        if (nombreRecepcionista) {
+            const textoNombre = nombreRecepcionista.textContent || nombreRecepcionista.innerText;
+            if (textoNombre.toLowerCase().indexOf(filter) > -1) {
+                filas[i].style.display = "";
+            } else {
+                filas[i].style.display = "none";
+            }
+        }
+    }
+}
+
+function validarFormulario() {
+    const password = document.getElementById('password').value;
+    const email = document.getElementById('correoelectronico').value;
+    const cedula = document.getElementById('cedula') ? document.getElementById('cedula').value : ""; // Asegúrate de que este campo esté en el formulario
+
+    // Validar contraseña
+    const passwordRegex = /^(?=.[A-Z])(?=.[\W])[A-Za-z\d\W_]{8,}$/;
+    if (password && !passwordRegex.test(password)) {
+        alert('La contraseña debe tener al menos 8 caracteres, una letra mayúscula y un carácter especial.');
+        return false;
+    }
+
+    // Validar correo electrónico
+    const emailRegex = /^[^\s@]+@[^\s@]+.[^\s@]+$/;
+    if (email && !emailRegex.test(email)) {
+        alert('El correo electrónico no es válido.');
+        return false;
+    }
+
+    // Validar cédula (esto dependerá del formato específico de la cédula)
+    const cedulaRegex = /^\d{10}$/; // Ejemplo para cédulas de 10 dígitos
+    if (cedula && !cedulaRegex.test(cedula)) {
+        alert('La cédula debe tener 10 dígitos.');
+        return false;
+    }
+
+    return true;
+}

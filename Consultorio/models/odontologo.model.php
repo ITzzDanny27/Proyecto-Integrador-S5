@@ -28,15 +28,20 @@ class OdontologoModel {
     public static function addOdontologo($tabla, $datos) {
         $conexion = new Clase_Conectar();
         $db = $conexion->conectar();
-    
+
+        // Validar correo electrónico
+        if (!filter_var($datos['CORREO_ELECTRONICO'], FILTER_VALIDATE_EMAIL)) {
+            return ['result' => 'error', 'message' => 'El correo electrónico no es válido.'];
+        }
+
         $query = "INSERT INTO $tabla (NOMBRE, APELLIDO, ESPECIALIDAD, TELEFONO, CORREO_ELECTRONICO) VALUES (?, ?, ?, ?, ?)";
         $stmt = $db->prepare($query);
         $stmt->bind_param("sssss", $datos['NOMBRE'], $datos['APELLIDO'], $datos['ESPECIALIDAD'], $datos['TELEFONO'], $datos['CORREO_ELECTRONICO']);
         $result = $stmt->execute();
         $stmt->close();
         $db->close();
-    
-        return $result;
+
+        return $result ? ['result' => 'ok'] : ['result' => 'error', 'message' => 'Error al guardar el odontólogo.'];
     }
     
 
@@ -61,18 +66,23 @@ class OdontologoModel {
 
     // Función para actualizar un paciente
     public static function updateOdontologo($tabla, $datos) {
-    $conexion = new Clase_Conectar();
-    $db = $conexion->conectar();
+        $conexion = new Clase_Conectar();
+        $db = $conexion->conectar();
 
-    $query = "UPDATE $tabla SET NOMBRE = ?, APELLIDO = ?, ESPECIALIDAD = ?, TELEFONO = ?, CORREO_ELECTRONICO = ? WHERE id_odontologo = ?";
-    $stmt = $db->prepare($query);
-    $stmt->bind_param("sssssi", $datos['NOMBRE'], $datos['APELLIDO'], $datos['ESPECIALIDAD'], $datos['TELEFONO'], $datos['CORREO_ELECTRONICO'], $datos['id_odontologo']);
-    $result = $stmt->execute();
-    $stmt->close();
-    $db->close();
+        // Validar correo electrónico
+        if (!filter_var($datos['CORREO_ELECTRONICO'], FILTER_VALIDATE_EMAIL)) {
+            return ['result' => 'error', 'message' => 'El correo electrónico no es válido.'];
+        }
 
-    return $result;
-}
+        $query = "UPDATE $tabla SET NOMBRE = ?, APELLIDO = ?, ESPECIALIDAD = ?, TELEFONO = ?, CORREO_ELECTRONICO = ? WHERE id_odontologo = ?";
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("sssssi", $datos['NOMBRE'], $datos['APELLIDO'], $datos['ESPECIALIDAD'], $datos['TELEFONO'], $datos['CORREO_ELECTRONICO'], $datos['id_odontologo']);
+        $result = $stmt->execute();
+        $stmt->close();
+        $db->close();
+
+        return $result ? ['result' => 'ok'] : ['result' => 'error', 'message' => 'Error al actualizar el odontólogo.'];
+    }
 
     // Función para eliminar un paciente
     public static function deleteOdontologo($tabla, $id_odontologo) {

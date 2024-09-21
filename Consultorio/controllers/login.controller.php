@@ -27,8 +27,10 @@ switch ($_GET["op"]) {
 
                     // Redireccionar según el rol
                     if ($res['rol'] == 'recepcionista') {
+                        $_SESSION['mensaje'] = 'Bienvenido, recepcionista!';
                         header('Location: ../views/cita.php');
                     } elseif ($res['rol'] == 'admin') {
+                        $_SESSION['mensaje'] = 'Bienvenido, administrador!';
                         header('Location: ../views/paciente.php');
                     } else {
                         header('Location: ../index.php?op=4'); // Rol no reconocido

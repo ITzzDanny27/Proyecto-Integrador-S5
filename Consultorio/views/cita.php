@@ -42,6 +42,14 @@
             <?php require_once('./html/header.php') ?>
             <!-- Navbar End -->
 
+            <!-- Mostrar el mensaje si está disponible -->
+            <?php
+            if (isset($_SESSION['mensaje'])) {
+                echo '<div class="alert alert-info" role="alert">' . $_SESSION['mensaje'] . '</div>';
+                unset($_SESSION['mensaje']); // Eliminar el mensaje después de mostrarlo
+            }
+            ?>
+
             <!-- Nueva Cita Modal -->
             <div class="modal fade" id="modalCita" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">

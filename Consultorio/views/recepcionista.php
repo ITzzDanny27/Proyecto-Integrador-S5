@@ -99,7 +99,7 @@
                         </button>
                     </div>
                     <div>
-                        <input onkeydown="if (event.keyCode === 13) buscarRecepcionista(this.value)" style="width: 25rem;" type="text" id="buscarRecepcionista" class="form-control mb-4 mx-3" placeholder="Buscar Recepcionista">
+                        <input oninput="buscarRecepcionista(this.value)" style="width: 25rem;" type="text" id="buscarRecepcionista" class="form-control mb-4 mx-3" placeholder="Buscar Recepcionista">
                     </div>
                 </div>
 

@@ -137,6 +137,7 @@
                 <i class="bi bi-file-earmark-plus-fill"></i> Nuevo Tratamiento
                 </button>
                 <h6 style="text-align: center;" class='mb-4'> Lista de tratamientos</h6>
+                    <input oninput="buscarTratamiento(this.value)" style="width: 20rem;" type="text" id="buscarTratamiento" class="form-control mb-4 mx-3" placeholder="Buscar Tratamiento">
                 <div class='d-flex align-items-center justify-content-between mb-4'>
                     <table class="table table-bordered table-striped table-hover table-responsive">
                         <thead class="table-light">

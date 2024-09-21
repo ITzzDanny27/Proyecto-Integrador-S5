@@ -116,3 +116,56 @@ function eliminarOdontologo(id) {
         .catch(error => console.error("Error al eliminar el odontologo:", error));
     }
 }
+
+// Función para buscar odontólogos en tiempo real
+function buscarOdontologo(query) {
+    const filter = query.toLowerCase();
+    const filas = document.getElementById("cuerpoOdontologos").getElementsByTagName("tr");
+
+    for (let i = 0; i < filas.length; i++) {
+        const nombreOdontologo = filas[i].getElementsByTagName("td")[1]; // Ajusta al índice de la columna de nombre en tu tabla
+        if (nombreOdontologo) {
+            const textoNombre = nombreOdontologo.textContent || nombreOdontologo.innerText;
+            if (textoNombre.toLowerCase().indexOf(filter) > -1) {
+                filas[i].style.display = "";
+            } else {
+                filas[i].style.display = "none";
+            }
+        }
+    }
+}
+
+function validarFormulario() {
+    const nombre = document.getElementById('NOMBRE').value;
+    const apellido = document.getElementById('APELLIDO').value;
+    const especialidad = document.getElementById('ESPECIALIDAD').value;
+    const telefono = document.getElementById('TELEFONO').value;
+    const correo = document.getElementById('CORREO_ELECTRONICO').value;
+
+    // Validar nombre y apellido (no vacío)
+    if (!nombre.trim()) {
+        alert('El nombre no puede estar vacío.');
+        return false;
+    }
+
+    if (!apellido.trim()) {
+        alert('El apellido no puede estar vacío.');
+        return false;
+    }
+
+    // Validar teléfono (solo números y longitud mínima)
+    const telefonoRegex = /^\d{10}$/; // Ejemplo para números de 10 dígitos
+    if (!telefonoRegex.test(telefono)) {
+        alert('El teléfono debe tener 10 dígitos.');
+        return false;
+    }
+
+    // Validar correo electrónico
+    const emailRegex = /^[^\s@]+@[^\s@]+.[^\s@]+$/;
+    if (!emailRegex.test(correo)) {
+        alert('El correo electrónico no es válido.');
+        return false;
+    }
+
+    return true;
+}

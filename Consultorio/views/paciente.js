@@ -125,3 +125,21 @@ function eliminarPaciente(id) {
         .catch(error => console.error("Error al eliminar el paciente:", error));
     }
 }
+
+// Función para buscar pacientes en tiempo real
+function buscarPaciente(query) {
+    const filter = query.toLowerCase();
+    const filas = document.getElementById("cuerpoPacientes").getElementsByTagName("tr");
+
+    for (let i = 0; i < filas.length; i++) {
+        const nombrePaciente = filas[i].getElementsByTagName("td")[1]; // Ajusta al índice de la columna de nombre en tu tabla
+        if (nombrePaciente) {
+            const textoNombre = nombrePaciente.textContent || nombrePaciente.innerText;
+            if (textoNombre.toLowerCase().indexOf(filter) > -1) {
+                filas[i].style.display = "";
+            } else {
+                filas[i].style.display = "none";
+            }
+        }
+    }
+}

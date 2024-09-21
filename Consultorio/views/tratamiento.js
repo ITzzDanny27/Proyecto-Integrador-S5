@@ -165,4 +165,22 @@ var eliminar = (TratamientoId) => {
     });
 };
 
+// Función para buscar tratamientos en tiempo real
+function buscarTratamiento(query) {
+    const filter = query.toLowerCase();
+    const filas = document.getElementById("cuerpotratamiento").getElementsByTagName("tr");
+
+    for (let i = 0; i < filas.length; i++) {
+        const descripcionTratamiento = filas[i].getElementsByTagName("td")[1]; // Ajusta al índice de la columna de descripción en tu tabla
+        if (descripcionTratamiento) {
+            const textoDescripcion = descripcionTratamiento.textContent || descripcionTratamiento.innerText;
+            if (textoDescripcion.toLowerCase().indexOf(filter) > -1) {
+                filas[i].style.display = "";
+            } else {
+                filas[i].style.display = "none";
+            }
+        }
+    }
+}
+
 init();

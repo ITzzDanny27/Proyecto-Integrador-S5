@@ -67,6 +67,7 @@ function listarConsultas() {
                     <td>${consulta.FECHA}</td>
                     <td>${consulta.HORA}</td>
                     <td>${consulta.CITA_ESTADO}</td>
+                    <td>${consulta.DESCRIPCION}</td> <!-- Aquí se añade la descripción -->
                     <td>${consulta.TRATAMIENTO_DESCRIPCION}</td>
                     <td>
                         <button class="btn btn-warning btn-sm" onclick="editarConsulta(${consulta.ID_CONSULTA})">Editar</button>
@@ -178,3 +179,20 @@ document.addEventListener("DOMContentLoaded", function () {
     // El resto de tu código aquí...
 });
 
+// Función para buscar consultas en tiempo real
+function buscarConsulta(query) {
+    const filter = query.toLowerCase();
+    const filas = document.getElementById("cuerpoConsultas").getElementsByTagName("tr");
+
+    for (let i = 0; i < filas.length; i++) {
+        const nombrePaciente = filas[i].getElementsByTagName("td")[2]; // Ajusta al índice de la columna que contiene el nombre del paciente
+        if (nombrePaciente) {
+            const textoNombre = nombrePaciente.textContent || nombrePaciente.innerText;
+            if (textoNombre.toLowerCase().indexOf(filter) > -1) {
+                filas[i].style.display = "";
+            } else {
+                filas[i].style.display = "none";
+            }
+        }
+    }
+}

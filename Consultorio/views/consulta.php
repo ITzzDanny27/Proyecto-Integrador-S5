@@ -92,7 +92,7 @@
                         </button>
                     </div>
                     <div>
-                        <input onkeydown="if (event.keyCode === 13) buscarConsulta(this.value)" style="width: 25rem;" type="text" id="buscarConsulta" class="form-control mb-4 mx-3" placeholder="Buscar Consulta">
+                    <input oninput="buscarConsulta(this.value)" style="width: 20rem;" type="text" id="buscarConsulta" class="form-control mb-4 mx-3" placeholder="Buscar Consulta">
                     </div>
                 </div>
 
@@ -108,6 +108,7 @@
                                 <th>Hora</th>
                                 <th>Estado</th>
                                 <th>Tratamiento</th>
+                                <th>Descripción</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>

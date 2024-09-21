@@ -95,7 +95,7 @@
                         </button>
                     </div>
                     <div>
-                        <input onkeydown="if (event.keyCode === 13) buscarOdontologo(this.value)" style="width: 25rem;" type="text" id="buscarOdontologo" class="form-control mb-4 mx-3" placeholder="Buscar Odontologo">
+                        <input oninput="buscarOdontologo(this.value)" style="width: 25rem;" type="text" id="buscarOdontologo" class="form-control mb-4 mx-3" placeholder="Buscar Odontólogo">
                     </div>
                 </div>
 
