@@ -80,6 +80,36 @@ class CitaModel {
         return $result;
     }
 
+    public static function finalizarCita($id_cita) {
+        $conexion = new Clase_Conectar();
+        $db = $conexion->conectar();
+    
+        // Actualiza la columna ESTADO a "finalizado" para la cita con el ID proporcionado
+        $query = "UPDATE cita SET ESTADO = 'Finalizado' WHERE ID_CITA = ?";
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("i", $id_cita);
+        $result = $stmt->execute();
+        $stmt->close();
+    
+        $db->close();
+        return $result;
+    }
+    
+    public static function updateEstadoFinalizado($id_cita) {
+        $conexion = new Clase_Conectar();
+        $db = $conexion->conectar();
+
+        // Actualiza la columna ESTADO a "finalizado" para la cita con el ID proporcionado
+        $query = "UPDATE cita SET ESTADO = 'Finalizado' WHERE ID_CITA = ?";
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("i", $id_cita);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        $db->close();
+        return $result;
+    }
+
     // Función para eliminar una cita
     public static function deleteCita($id_cita) {
         $conexion = new Clase_Conectar();

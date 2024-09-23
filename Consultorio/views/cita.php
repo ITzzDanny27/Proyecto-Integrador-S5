@@ -2,7 +2,7 @@
 <html lang='es'>
 
 <head>
-    <?php require_once('./html/head.php') ?>
+    <?php require_once('./html/head.php'); ?>
     <link href='../public/lib/calendar/lib/main.css' rel='stylesheet' />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -18,7 +18,6 @@
             flex: 1;
         }
     </style>
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
@@ -33,13 +32,13 @@
         <!-- Spinner End -->
 
         <!-- Sidebar Start -->
-        <?php require_once('./html/menu.php') ?>
+        <?php require_once('./html/menu.php'); ?>
         <!-- Sidebar End -->
 
         <!-- Content Start -->
         <div class='content'>
             <!-- Navbar Start -->
-            <?php require_once('./html/header.php') ?>
+            <?php require_once('./html/header.php'); ?>
             <!-- Navbar End -->
 
             <!-- Mostrar el mensaje si está disponible -->
@@ -83,8 +82,12 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="ESTADO">Estado</label>
-                                    <input type="text" name="estado" id="estado" class="form-control">
+                                    <select name="estado" id="estado" class="form-control">
+                                        <option value="Pendiente">Pendiente</option>
+                                        <option value="Finalizado">Finalizado</option>
+                                    </select>
                                 </div>
+
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">Guardar</button>
@@ -123,7 +126,7 @@
                                 <th>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody id="cuerpoCitas">
+                        <tbody id="cuerpoCitasPendientes">
                             <!-- Aquí van los datos de las citas -->
                         </tbody>
                     </table>
@@ -131,8 +134,32 @@
             </div>
             <!-- Fin Lista de Citas -->
 
+            <!-- Segunda Tabla de Citas Finalizadas -->
+            <div class='container-fluid pt-4 px-3'>
+                <h6 style="text-align: center;" class='mb-4'>Lista de Citas Finalizadas</h6>
+                <div class='d-flex align-items-center justify-content-between mb-4'>
+                    <table class="table table-bordered table-striped table-hover table-responsive">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Paciente</th>
+                                <th>Odontólogo</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpoCitasFinalizadas">
+                            <!-- Aquí van los datos de las citas finalizadas -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Fin Segunda Tabla de Citas Finalizadas -->
+
             <!-- Footer Start -->
-            <?php require_once('./html/footer.php') ?>
+            <?php require_once('./html/footer.php'); ?>
             <!-- Footer End -->
         </div>
         <!-- Content End -->
@@ -142,7 +169,7 @@
     </div>
 
     <!-- JavaScript Libraries -->
-    <?php require_once('../views/html/scripts.php') ?>
+    <?php require_once('../views/html/scripts.php'); ?>
     <script src="../views/cita.js" defer></script>
 
 </body>

@@ -33,7 +33,17 @@ try {
                 } else {
                     echo json_encode(["result" => "Método no permitido"]);
                 }
-                break;
+            break;
+
+            case 'finalizarCita':
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $id_cita = $_POST['id_cita'];
+                    $respuesta = CitaModel::finalizarCita($id_cita);
+                    echo json_encode(["result" => $respuesta ? "ok" : "error"]);
+                } else {
+                    echo json_encode(["result" => "Método no permitido"]);
+                }
+            break;
 
             case 'updateCita':
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
