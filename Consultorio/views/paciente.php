@@ -116,7 +116,7 @@
                         <input oninput="buscarPaciente(this.value)" style="width: 25rem;" type="text" id="buscarPaciente" class="form-control mb-4 mx-3" placeholder="Buscar Paciente">                    </div>
                 </div>
 
-                <h6 style="text-align: center;" class='mb-4'>Lista de Pacientes</h6>
+                <h6 style="text-align: center; color: white;" class='mb-4'>Lista de Pacientes</h6>
                 <div class='d-flex align-items-center justify-content-between mb-4'>
                     <table class="table table-bordered table-striped table-hover table-responsive">
                         <thead class="table-light">

@@ -109,7 +109,7 @@
 
 
             <!-- Tabla de Lista de Historiales -->
-            <h6 style="text-align: center;" class='mb-4'>Lista de Historiales Médicos</h6>
+            <h6 style="text-align: center; color: white;" class='mb-4'>Lista de Historiales Médicos</h6>
             <div class='d-flex align-items-center justify-content-between mb-4'>
                 <table class="table table-bordered table-striped table-hover table-responsive">
                     <thead class="table-light">

@@ -112,7 +112,7 @@
                     </div>
                 </div>
 
-                <h6 style="text-align: center;" class='mb-4'>Lista de Citas</h6>
+                <h6 style="text-align: center; color: white;" class='mb-4'>Lista de Citas</h6>
                 <div class='d-flex align-items-center justify-content-between mb-4'>
                     <table class="table table-bordered table-striped table-hover table-responsive">
                         <thead class="table-light">
@@ -136,7 +136,7 @@
 
             <!-- Segunda Tabla de Citas Finalizadas -->
             <div class='container-fluid pt-4 px-3'>
-                <h6 style="text-align: center;" class='mb-4'>Lista de Citas Finalizadas</h6>
+                <h6 style="text-align: center; color: white;" class='mb-4'>Lista de Citas Finalizadas</h6>
                 <div class='d-flex align-items-center justify-content-between mb-4'>
                     <table class="table table-bordered table-striped table-hover table-responsive">
                         <thead class="table-light">

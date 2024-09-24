@@ -96,7 +96,7 @@
                     </div>
                 </div>
 
-                <h6 style="text-align: center;" class='mb-4'>Lista de Consulta</h6>
+                <h6 style="text-align: center; color: white;" class='mb-4'>Lista de Consulta</h6>
                 <div class='d-flex align-items-center justify-content-between mb-4'>
                     <table class="table table-bordered table-striped table-hover table-responsive">
                         <thead class="table-light">
