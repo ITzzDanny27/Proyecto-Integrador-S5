@@ -10,13 +10,17 @@ class ConsultaModel
         $db = $conexion->conectar();
     
         $query = "SELECT c.ID_CONSULTA, c.DESCRIPCION, c.ID_CITA, ci.FECHA, ci.HORA, 
-                         ci.ESTADO AS CITA_ESTADO, 
-                         p.PRIMER_NOMBRE AS PACIENTE_NOMBRE, p.APELLIDO_PATERNO AS PACIENTE_APELLIDO, 
-                         t.DESCRIPCION AS TRATAMIENTO_DESCRIPCION
-                  FROM consulta c
-                  JOIN cita ci ON c.ID_CITA = ci.ID_CITA
-                  JOIN paciente p ON ci.ID_PACIENTE = p.ID_PACIENTE
-                  JOIN tratamiento t ON c.ID_TRATAMIENTO = t.ID_TRATAMIENTO";
+                 ci.ESTADO AS CITA_ESTADO, 
+                 p.PRIMER_NOMBRE AS PACIENTE_NOMBRE, p.APELLIDO_PATERNO AS PACIENTE_APELLIDO, 
+                 t.DESCRIPCION AS TRATAMIENTO_DESCRIPCION,
+                 o.NOMBRE AS ODONTOLOGO_NOMBRE, o.APELLIDO AS ODONTOLOGO_APELLIDO
+          FROM consulta c
+          JOIN cita ci ON c.ID_CITA = ci.ID_CITA
+          JOIN paciente p ON ci.ID_PACIENTE = p.ID_PACIENTE
+          JOIN tratamiento t ON c.ID_TRATAMIENTO = t.ID_TRATAMIENTO
+          JOIN cita_x_odontologo cxo ON ci.ID_CITA = cxo.ID_CITA
+          JOIN odontologo o ON cxo.ID_ODONTOLOGO = o.ID_ODONTOLOGO";
+
         $stmt = $db->prepare($query);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -50,7 +54,10 @@ class ConsultaModel
             $tabla c
         INNER JOIN 
             paciente p ON c.ID_PACIENTE = p.ID_PACIENTE
-    ";
+        WHERE 
+            c.ESTADO = 'Finalizado'
+        ";
+
         $stmt = $db->prepare($query);
         $stmt->execute();
         $result = $stmt->get_result();

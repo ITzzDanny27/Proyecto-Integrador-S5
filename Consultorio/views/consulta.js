@@ -62,16 +62,17 @@ function listarConsultas() {
                 const fila = document.createElement("tr");
                 fila.innerHTML = `
                     <td>${index + 1}</td>
-                    <td>${consulta.ID_CONSULTA}</td>
+                    
                     <td>${consulta.PACIENTE_NOMBRE} ${consulta.PACIENTE_APELLIDO}</td>
                     <td>${consulta.FECHA}</td>
                     <td>${consulta.HORA}</td>
                     <td>${consulta.CITA_ESTADO}</td>
-                    <td>${consulta.DESCRIPCION}</td> <!-- Aquí se añade la descripción -->
                     <td>${consulta.TRATAMIENTO_DESCRIPCION}</td>
+                    <td>${consulta.ODONTOLOGO_NOMBRE} ${consulta.ODONTOLOGO_APELLIDO}</td>
+                    <td>${consulta.DESCRIPCION}</td> <!-- Aquí se añade la descripción -->
                     <td>
                         <button class="btn btn-warning btn-sm" onclick="editarConsulta(${consulta.ID_CONSULTA})">Editar</button>
-                        <button class="btn btn-danger btn-sm" onclick="eliminarConsulta(${consulta.ID_CONSULTA})">Eliminar</button>
+                        
                     </td>
                 `;
                 cuerpoConsultas.appendChild(fila);
@@ -185,7 +186,7 @@ function buscarConsulta(query) {
     const filas = document.getElementById("cuerpoConsultas").getElementsByTagName("tr");
 
     for (let i = 0; i < filas.length; i++) {
-        const nombrePaciente = filas[i].getElementsByTagName("td")[2]; // Ajusta al índice de la columna que contiene el nombre del paciente
+        const nombrePaciente = filas[i].getElementsByTagName("td")[1]; // Ajusta al índice de la columna que contiene el nombre del paciente
         if (nombrePaciente) {
             const textoNombre = nombrePaciente.textContent || nombrePaciente.innerText;
             if (textoNombre.toLowerCase().indexOf(filter) > -1) {

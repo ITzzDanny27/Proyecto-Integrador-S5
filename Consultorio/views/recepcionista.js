@@ -5,6 +5,10 @@ document.addEventListener("DOMContentLoaded", function () {
     formRecepcionista.addEventListener("submit", function (event) {
         event.preventDefault(); // Evita la redirección predeterminada del formulario
 
+        if (!validarFormulario()) {
+            return; // Evita el envío si hay errores de validación
+        }
+
         const formData = new FormData(formRecepcionista);
         const idRecepcionista = document.getElementById("id_recepcionista").value;
 
@@ -83,17 +87,48 @@ function editarRecepcionista(id) {
     fetch(`../controllers/recepcionista.controller.php?action=listar&id=${id}`)
         .then(response => response.json())
         .then(data => {
-            const recepcionista = data[0];
-            document.getElementById('id_recepcionista').value = recepcionista.ID_RECEPCIONISTA;
-            document.getElementById('nombre').value = recepcionista.NOMBRE;
-            document.getElementById('apellido').value = recepcionista.APELLIDO;
-            document.getElementById('telefono').value = recepcionista.TELEFONO;
-            document.getElementById('correo_electronico').value = recepcionista.CORREO_ELECTRONICO;
-            document.getElementById('password').value = recepcionista.PASSWORD;
+            if (data.length > 0) {
+                const recepcionista = data[0];
+                document.getElementById('id_recepcionista').value = recepcionista.ID_RECEPCIONISTA;
+                document.getElementById('nombre').value = recepcionista.NOMBRE;
+                document.getElementById('apellido').value = recepcionista.APELLIDO;
+                document.getElementById('telefono').value = recepcionista.TELEFONO;
+                document.getElementById('correo_electronico').value = recepcionista.CORREO_ELECTRONICO;
+                document.getElementById('password').value = recepcionista.PASSWORD;
 
-            $('#modalRecepcionista').modal('show'); // Mostrar el modal de edición
+                // Mostrar el modal de edición
+                $('#modalRecepcionista').modal('show');
+            } else {
+                alert("No se encontraron datos del recepcionista.");
+            }
         })
         .catch(error => console.error("Error al obtener los datos del recepcionista:", error));
+}
+
+function validarFormulario() {
+    const password = document.getElementById('password').value;
+    const email = document.getElementById('correo_electronico').value;
+    const telefono = document.getElementById('telefono') ? document.getElementById('telefono').value : ""; // Asegúrate de que este campo esté en el formulario
+
+    // Validar contraseña
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[\W_])[A-Za-z\d\W_]{8,}$/;
+    if (password && !passwordRegex.test(password)) {
+        alert('La contraseña debe tener al menos 8 caracteres, una letra mayúscula y un carácter especial.');
+        return false;
+    }
+    // Validar correo electrónico
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (email && !emailRegex.test(email)) {
+        alert('El correo electrónico no es válido.');
+        return false;
+    }
+    const telefonoRegex = /^\d{10}$/; // Ajusta la expresión regular según el formato deseado
+    if (!telefonoRegex.test(telefono)) {
+        alert("El número de teléfono no es válido. Debe tener 10 dígitos.", "error");
+        return false;
+    }
+
+    return true;
 }
 
 // Función para eliminar recepcionista
@@ -114,51 +149,4 @@ function eliminarRecepcionista(id) {
         })
         .catch(error => console.error("Error al eliminar el recepcionista:", error));
     }
-}
-
-// Función para buscar recepcionistas en tiempo real
-function buscarRecepcionista(query) {
-    const filter = query.toLowerCase();
-    const filas = document.getElementById("cuerpoRecepcionistas").getElementsByTagName("tr");
-
-    for (let i = 0; i < filas.length; i++) {
-        const nombreRecepcionista = filas[i].getElementsByTagName("td")[1]; // Ajusta al índice de la columna de nombre en tu tabla
-        if (nombreRecepcionista) {
-            const textoNombre = nombreRecepcionista.textContent || nombreRecepcionista.innerText;
-            if (textoNombre.toLowerCase().indexOf(filter) > -1) {
-                filas[i].style.display = "";
-            } else {
-                filas[i].style.display = "none";
-            }
-        }
-    }
-}
-
-function validarFormulario() {
-    const password = document.getElementById('password').value;
-    const email = document.getElementById('correoelectronico').value;
-    const cedula = document.getElementById('cedula') ? document.getElementById('cedula').value : ""; // Asegúrate de que este campo esté en el formulario
-
-    // Validar contraseña
-    const passwordRegex = /^(?=.[A-Z])(?=.[\W])[A-Za-z\d\W_]{8,}$/;
-    if (password && !passwordRegex.test(password)) {
-        alert('La contraseña debe tener al menos 8 caracteres, una letra mayúscula y un carácter especial.');
-        return false;
-    }
-
-    // Validar correo electrónico
-    const emailRegex = /^[^\s@]+@[^\s@]+.[^\s@]+$/;
-    if (email && !emailRegex.test(email)) {
-        alert('El correo electrónico no es válido.');
-        return false;
-    }
-
-    // Validar cédula (esto dependerá del formato específico de la cédula)
-    const cedulaRegex = /^\d{10}$/; // Ejemplo para cédulas de 10 dígitos
-    if (cedula && !cedulaRegex.test(cedula)) {
-        alert('La cédula debe tener 10 dígitos.');
-        return false;
-    }
-
-    return true;
 }

@@ -84,7 +84,7 @@
                                     <label for="ESTADO">Estado</label>
                                     <select name="estado" id="estado" class="form-control">
                                         <option value="Pendiente">Pendiente</option>
-                                        <option value="Finalizado">Finalizado</option>
+                                        <!-- <option value="Finalizado">Finalizado</option> -->
                                     </select>
                                 </div>
 

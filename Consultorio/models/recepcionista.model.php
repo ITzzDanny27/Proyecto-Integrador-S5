@@ -23,7 +23,7 @@ class RecepcionistaModel {
         }
 
         // Validar correo electrónico
-        if (empty($datos['correo_electronico']) || !filter_var($datos['correo_electronico'], FILTER_VALIDATE_EMAIL)) {
+        if (empty($datos['correo_electronico']) || !filter_var($datos['correo_electronico'])) {
             $errores[] = 'El correo electrónico no es válido.';
         }
 

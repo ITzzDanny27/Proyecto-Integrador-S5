@@ -34,8 +34,8 @@ $rol = $_SESSION['usuario_rol'] ?? ''; // Si no está definida, asigna una caden
             <?php endif; ?>
 
             <!-- Opciones comunes a ambos roles (admin y recepcionista) -->
-            <a href='consulta.php' class='nav-item nav-link'><i class='fa fa-th me-2'></i>Consulta</a>
-            <a href='HistorialMedico.php' class='nav-item nav-link'><i class='fa fa-th me-2'></i>Historial Médico</a>
+            <a href='consulta.php' class='nav-item nav-link'><i class='fa fa-th me-2'></i>Historial Médico</a>
+            <!-- <a href='HistorialMedico.php' class='nav-item nav-link'><i class='fa fa-th me-2'></i>Historial Médico</a> -->
         </div>
     </nav>
 </div>

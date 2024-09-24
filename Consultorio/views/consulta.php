@@ -88,26 +88,27 @@
                 <div class="container d-flex flex-row justify-content-start">
                     <div>
                         <button type="button" class="btn btn-primary mb-4 mx-2" data-bs-toggle="modal" data-bs-target="#modalConsulta">
-                            <i class="bi bi-person-check"></i> Nueva Consulta
+                            <i class="bi bi-person-check"></i> Agregar Historial
                         </button>
                     </div>
                     <div>
-                    <input oninput="buscarConsulta(this.value)" style="width: 20rem;" type="text" id="buscarConsulta" class="form-control mb-4 mx-3" placeholder="Buscar Consulta">
+                    <input oninput="buscarConsulta(this.value)" style="width: 20rem;" type="text" id="buscarConsulta" class="form-control mb-4 mx-3" placeholder="Buscar Historial">
                     </div>
                 </div>
 
-                <h6 style="text-align: center; color: white;" class='mb-4'>Lista de Consulta</h6>
+                <h6 style="text-align: center; color: white;" class='mb-4'>Lista de Historial Médico</h6>
                 <div class='d-flex align-items-center justify-content-between mb-4'>
                     <table class="table table-bordered table-striped table-hover table-responsive">
                         <thead class="table-light">
                             <tr>
                                 <th>#</th>
-                                <th>ID Consulta</th>
+                                <!-- <th>ID Consulta</th> -->
                                 <th>Nombres</th>
                                 <th>Fecha</th>
                                 <th>Hora</th>
                                 <th>Estado</th>
                                 <th>Tratamiento</th>
+                                <th>Odontólogo</th>
                                 <th>Descripción</th>
                                 <th>Acciones</th>
                             </tr>

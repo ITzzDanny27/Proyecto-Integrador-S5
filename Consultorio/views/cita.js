@@ -51,38 +51,49 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Función para llenar el selector de pacientes
 function cargarPacientes() {
-    fetch("../controllers/cita.controller.php?action=getPacientes")
-        .then(response => response.json())
-        .then(data => {
-            if (!Array.isArray(data)) throw new Error("Respuesta inesperada al cargar pacientes.");
-            const selectPaciente = document.getElementById("id_paciente");
-            selectPaciente.innerHTML = ""; // Limpiar el contenido actual
-            data.forEach(paciente => {
-                const option = document.createElement("option");
-                option.value = paciente.ID_PACIENTE;
-                option.text = `${paciente.PRIMER_NOMBRE} ${paciente.APELLIDO_PATERNO}`;
-                selectPaciente.appendChild(option);
+    return new Promise((resolve, reject) => {
+        fetch("../controllers/cita.controller.php?action=getPacientes")
+            .then(response => response.json())
+            .then(data => {
+                if (!Array.isArray(data)) throw new Error("Respuesta inesperada al cargar pacientes.");
+                const selectPaciente = document.getElementById("id_paciente");
+                selectPaciente.innerHTML = ""; // Limpiar el contenido actual
+                data.forEach(paciente => {
+                    const option = document.createElement("option");
+                    option.value = paciente.ID_PACIENTE;
+                    option.text = `${paciente.PRIMER_NOMBRE} ${paciente.APELLIDO_PATERNO}`;
+                    selectPaciente.appendChild(option);
+                });
+                resolve(); // Resuelve la promesa después de llenar los pacientes
+            })
+            .catch(error => {
+                console.error("Error al cargar pacientes:", error);
+                reject(error); // Rechaza la promesa si hay un error
             });
-        })
-        .catch(error => console.error("Error al cargar pacientes:", error));
+    });
 }
 
-// Función para llenar el selector de odontólogos
 function cargarOdontologos() {
-    fetch("../controllers/cita.controller.php?action=getOdontologos")
-        .then(response => response.json())
-        .then(data => {
-            if (!Array.isArray(data)) throw new Error("Respuesta inesperada al cargar odontólogos.");
-            const selectOdontologo = document.getElementById("id_odontologo");
-            selectOdontologo.innerHTML = ""; // Limpiar el contenido actual
-            data.forEach(odontologo => {
-                const option = document.createElement("option");
-                option.value = odontologo.ID_ODONTOLOGO;
-                option.text = `${odontologo.NOMBRE} ${odontologo.APELLIDO}`;
-                selectOdontologo.appendChild(option);
+    return new Promise((resolve, reject) => {
+        fetch("../controllers/cita.controller.php?action=getOdontologos")
+            .then(response => response.json())
+            .then(data => {
+                if (!Array.isArray(data)) throw new Error("Respuesta inesperada al cargar odontólogos.");
+                const selectOdontologo = document.getElementById("id_odontologo");
+                selectOdontologo.innerHTML = ""; // Limpiar el contenido actual
+                data.forEach(odontologo => {
+                    const option = document.createElement("option");
+                    option.value = odontologo.ID_ODONTOLOGO;
+                    option.text = `${odontologo.NOMBRE} ${odontologo.APELLIDO}`;
+                    selectOdontologo.appendChild(option);
+                });
+                resolve(); // Resuelve la promesa después de llenar los odontólogos
+            })
+            .catch(error => {
+                console.error("Error al cargar odontólogos:", error);
+                reject(error); // Rechaza la promesa si hay un error
             });
-        })
-        .catch(error => console.error("Error al cargar odontólogos:", error));
+    });
 }
 
 // Función para limpiar el formulario
@@ -124,7 +135,7 @@ function listarCitas() {
                     <td>
                         <button class="btn btn-warning btn-sm" onclick="editarCita(${cita.ID_CITA})">Editar</button>
                         <button class="btn btn-danger btn-sm" onclick="eliminarCita(${cita.ID_CITA})">Eliminar</button>
-                        <button class="btn btn-warning btn-sm" onclick="finalizarCita(${cita.ID_CITA})">Finalizar</button>
+                        ${cita.ESTADO !== "Finalizado" ? `<button class="btn btn-success btn-sm" onclick="finalizarCita(${cita.ID_CITA})">Finalizar</button>` : ""}
                     </td>
                 `;
                 
@@ -170,24 +181,46 @@ function finalizarCita(id) {
     }
 }
 
+// Función para editar una cita
 function editarCita(id) {
-    fetch(`../controllers/cita.controller.php?action=listar&id=${id}`)
+    // Obtener los datos de la cita
+    fetch("../controllers/cita.controller.php?action=listar&id=${id}")
         .then(response => {
             if (!response.ok) {
                 return response.text().then(text => { throw new Error(text); });
             }
             return response.json();
         })
-        .then(data => {
-            const cita = data[0];
-            document.getElementById('id_cita').value = cita.ID_CITA;
-            document.getElementById('fecha').value = cita.FECHA;
-            document.getElementById('hora').value = cita.HORA;
-            document.getElementById('id_paciente').value = cita.ID_PACIENTE;
-            document.getElementById('id_odontologo').value = cita.ID_ODONTOLOGO;
-            document.getElementById('estado').value = cita.ESTADO;
-            
-            $('#modalCita').modal('show'); // Mostrar el modal de edición
+        .then(citaData => {
+            const cita = citaData[0];
+
+            // Cargar los pacientes y odontólogos antes de asignar los valores
+            Promise.all([cargarPacientes(), cargarOdontologos()])
+                .then(() => {
+                    // Asignar los valores del formulario
+                    document.getElementById('id_cita').value = cita.ID_CITA;
+                    document.getElementById('fecha').value = cita.FECHA;
+                    document.getElementById('hora').value = cita.HORA;
+
+                    // Seleccionar el paciente correcto
+                    const selectPaciente = document.getElementById('id_paciente');
+                    const pacienteOption = Array.from(selectPaciente.options).find(option => option.value == cita.ID_PACIENTE);
+                    if (pacienteOption) pacienteOption.selected = true;
+
+                    // Seleccionar el odontólogo correcto
+                    const selectOdontologo = document.getElementById('id_odontologo');
+                    const odontologoOption = Array.from(selectOdontologo.options).find(option => option.value == cita.ID_ODONTOLOGO);
+                    if (odontologoOption) odontologoOption.selected = true;
+
+                    document.getElementById('estado').value = cita.ESTADO;
+
+                    // Mostrar el modal de edición
+                    $('#modalCita').modal('show');
+                })
+                .catch(error => {
+                    console.error("Error al cargar los datos de pacientes u odontólogos:", error);
+                    alert("Ocurrió un error al cargar los datos de pacientes u odontólogos: " + error.message);
+                });
         })
         .catch(error => {
             console.error("Error al obtener los datos de la cita:", error);

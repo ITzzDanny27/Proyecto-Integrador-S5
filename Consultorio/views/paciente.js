@@ -5,6 +5,10 @@ document.addEventListener("DOMContentLoaded", function () {
     formPaciente.addEventListener("submit", function (event) {
         event.preventDefault(); // Evita la redirección predeterminada del formulario
 
+        if (!validarFormulario()) {
+            return; // Si la validación falla, no continuar
+        }
+
         const formData = new FormData(formPaciente);
         const idPaciente = document.getElementById("id_paciente").value;
 
@@ -142,4 +146,30 @@ function buscarPaciente(query) {
             }
         }
     }
+}
+
+function validarFormulario() {
+    const primerNombre = document.getElementById('primer_nombre').value.trim();
+    const apellidoPaterno = document.getElementById('apellido_paterno').value.trim();
+    const correoElectronico = document.getElementById('correo_electronico').value.trim();
+    const telefono = document.getElementById('telefono').value.trim();
+
+    if (!primerNombre || !apellidoPaterno || !correoElectronico || !telefono) {
+        alert("Error: Por favor, complete todos los campos obligatorios.");
+        return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+.[^\s@]+$/;
+    if (!emailRegex.test(correoElectronico)) {
+        alert("Error: El correo electrónico no es válido.");
+        return false;
+    }
+
+    const telefonoRegex = /^\d{10}$/; // Ajusta la expresión regular según el formato deseado
+    if (!telefonoRegex.test(telefono)) {
+        alert("Error: El número de teléfono no es válido. Debe tener 10 dígitos.");
+        return false;
+    }
+
+    return true; // El formulario es válido
 }
