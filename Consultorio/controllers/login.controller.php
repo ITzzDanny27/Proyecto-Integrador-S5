@@ -14,34 +14,49 @@ switch ($_GET["op"]) {
         $password = $_POST["PASSWORD"] ?? null;
 
         if (!empty($correo) && !empty($password)) {
-            $login = $usuario->loginParametros($correo, $password);
-            $res = mysqli_fetch_assoc($login);
+            $login = $usuario->loginParametros($correo, $password); // Recibe datos directamente del modelo
+            if (isset($login['error'])) {
+                // Si hubo un error (por ejemplo, usuario no encontrado o contraseña incorrecta)
+                header('Location: ../index.php?op=1'); // Usuario no encontrado o error en el login
+                exit();
+            }
 
-            if ($res) {
-                // Verifica la contraseña (esto ya lo haces en tu código)
-                if ($res['PASSWORD'] == $password) {
+            // Verifica la contraseña:
+            if ($login['rol'] == 'recepcionista') {
+                // Para recepcionista, usamos password_verify()
+                if (password_verify($password, $login['PASSWORD'])) {
                     // Iniciar la sesión y almacenar los datos del usuario
-                    $_SESSION['usuario_id'] = $res['ID_RECEPCIONISTA'] ?? $res['ID_ADMIN'];
-                    $_SESSION['usuario_rol'] = $res['rol'];
-                    $_SESSION['usuario_nombre'] = $res['NOMBRE'];
+                    $_SESSION['usuario_id'] = $login['ID_RECEPCIONISTA'];
+                    $_SESSION['usuario_rol'] = $login['rol'];
+                    $_SESSION['usuario_nombre'] = $login['NOMBRE'];
 
-                    // Redireccionar según el rol
-                    if ($res['rol'] == 'recepcionista') {
-                        $_SESSION['mensaje'] = 'Bienvenido, recepcionista!';
-                        header('Location: ../views/cita.php');
-                    } elseif ($res['rol'] == 'admin') {
-                        $_SESSION['mensaje'] = 'Bienvenido, administrador!';
-                        header('Location: ../views/paciente.php');
-                    } else {
-                        header('Location: ../index.php?op=4'); // Rol no reconocido
-                    }
+                    $_SESSION['mensaje'] = 'Bienvenido, recepcionista!';
+                    header('Location: ../views/cita.php');
                     exit();
                 } else {
-                    header('Location: ../index.php?op=3'); // Contraseña incorrecta
+                    // Contraseña incorrecta para recepcionista
+                    header('Location: ../index.php?op=3');
+                    exit();
+                }
+            } elseif ($login['rol'] == 'admin') {
+                // Para admin, comparamos la contraseña en texto plano
+                if ($password === $login['PASSWORD']) {
+                    // Iniciar la sesión y almacenar los datos del usuario
+                    $_SESSION['usuario_id'] = $login['ID_ADMIN'];
+                    $_SESSION['usuario_rol'] = $login['rol'];
+                    $_SESSION['usuario_nombre'] = $login['NOMBRE'];
+
+                    $_SESSION['mensaje'] = 'Bienvenido, administrador!';
+                    header('Location: ../views/paciente.php');
+                    exit();
+                } else {
+                    // Contraseña incorrecta para admin
+                    header('Location: ../index.php?op=3');
                     exit();
                 }
             } else {
-                header('Location: ../index.php?op=1'); // Usuario no encontrado
+                // Rol no reconocido
+                header('Location: ../index.php?op=4');
                 exit();
             }
         } else {
@@ -50,76 +65,7 @@ switch ($_GET["op"]) {
         }
         break;
 
-    // case "uno":
-    //     $ID_RECEPCIONISTA = $_GET["ID_RECEPCIONISTA"] ?? null;
-    //     if (!empty($ID_RECEPCIONISTA)) {
-    //         $dato = $usuario->uno($ID_RECEPCIONISTA);
-    //         $fila = mysqli_fetch_assoc($dato);
-    //         if (!empty($fila)) {
-    //             echo json_encode($fila);
-    //         } else {
-    //             echo json_encode(array("message" => "No se encontró el recepcionista"));
-    //         }
-    //     } else {
-    //         echo json_encode(array("message" => "Falta el ID del recepcionista"));
-    //     }
-    //     break;
-
-    // case "listar":
-    //     $ListaRecepcionistas = array();
-    //     $dato = $usuario->listarRecepcionista();
-
-    //     while ($fila = mysqli_fetch_assoc($dato)) {
-    //         $ListaRecepcionistas[] = $fila;
-    //     }
-
-    //     if (!empty($ListaRecepcionistas)) {
-    //         echo json_encode($ListaRecepcionistas);
-    //     } else {
-    //         echo json_encode(array("message" => "No hay recepcionistas"));
-    //     }
-    // break;
-
-    // case "insertar":
-    //     $NOMBRE = $_POST["NOMBRE"] ?? null;
-    //     $APELLIDO = $_POST["APELLIDO"] ?? null;
-    //     $CORREO_ELECTRONICO = $_POST["CORREO_ELECTRONICO"] ?? null;
-    //     $PASSWORD = $_POST["PASSWORD"] ?? null;
-    //     $ID_ROL = $_POST["ID_ROL"] ?? null;
-
-    //     if (!empty($CORREO_ELECTRONICO) && !empty($PASSWORD)) {
-    //         $insertar = $usuario->insertar($NOMBRE, $APELLIDO, $CORREO_ELECTRONICO, $PASSWORD, $ID_ROL);
-    //         echo json_encode($insertar);
-    //     } else {
-    //         echo json_encode(array("message" => "Faltan Datos"));
-    //     }
-    //     break;
-
-    // case "actualizar":
-    //     $ID_RECEPCIONISTA = $_POST["ID_RECEPCIONISTA"] ?? null;
-    //     $NOMBRE = $_POST["NOMBRE"] ?? null;
-    //     $APELLIDO = $_POST["APELLIDO"] ?? null;
-    //     $CORREO_ELECTRONICO = $_POST["CORREO_ELECTRONICO"] ?? null;
-    //     $PASSWORD = $_POST["PASSWORD"] ?? null;
-    //     $ID_ROL = $_POST["ID_ROL"] ?? null;
-
-    //     if (!empty($ID_RECEPCIONISTA) && !empty($CORREO_ELECTRONICO) && !empty($PASSWORD)) {
-    //         $actualizar = $usuario->actualizar($ID_RECEPCIONISTA, $NOMBRE, $APELLIDO, $CORREO_ELECTRONICO, $PASSWORD, $ID_ROL);
-    //         echo json_encode($actualizar);
-    //     } else {
-    //         echo json_encode(array("message" => "Faltan Datos"));
-    //     }
-    //     break;
-
-    // case "eliminar":
-    //     $ID_RECEPCIONISTA = $_POST["ID_RECEPCIONISTA"] ?? null;
-    //     if (!empty($ID_RECEPCIONISTA)) {
-    //         $eliminar = $usuario->eliminar($ID_RECEPCIONISTA);
-    //         echo json_encode($eliminar);
-    //     } else {
-    //         echo json_encode(array("message" => "Falta el ID del recepcionista"));
-    //     }
-    //     break;
+    // Otros casos...
 
 }
 ?>

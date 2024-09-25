@@ -10,31 +10,50 @@ class Clase_Usuarios
     $con = $con->Procedimiento_Conectar();
 
     // Consulta en la tabla recepcionista
-    $cadena = "SELECT *, 'recepcionista' as rol FROM `recepcionista` WHERE `CORREO_ELECTRONICO`=? AND `PASSWORD`=?";
+    $cadena = "SELECT *, 'recepcionista' as rol FROM `recepcionista` WHERE `CORREO_ELECTRONICO`=?";
     $stmt = $con->prepare($cadena);
-    $stmt->bind_param('ss', $CORREO_ELECTRONICO, $PASSWORD);
+    $stmt->bind_param('s', $CORREO_ELECTRONICO);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    // Si no encuentra resultados en recepcionista, busca en admin
-    if ($result->num_rows == 0) {
-        $cadenaAdmin = "SELECT *, 'admin' as rol FROM `admin` WHERE `CORREO_ELECTRONICO`=? AND `PASSWORD`=?";
-        $stmtAdmin = $con->prepare($cadenaAdmin);
-        $stmtAdmin->bind_param('ss', $CORREO_ELECTRONICO, $PASSWORD);
-        $stmtAdmin->execute();
-        $resultAdmin = $stmtAdmin->get_result();
-
-        // Si encuentra en admin, retornamos el resultado de admin
-        if ($resultAdmin->num_rows > 0) {
+    if ($result->num_rows > 0) {
+        $recepcionista = $result->fetch_assoc();
+        
+        // Usar password_verify() para comparar la contraseña ingresada con la encriptada
+        if (password_verify($PASSWORD, $recepcionista['PASSWORD'])) {
             $con->close();
-            return $resultAdmin;
+            return $recepcionista;  // Login exitoso
+        } else {
+            // Contraseña incorrecta
+            return ['error' => 'La contraseña es incorrecta.'];
         }
     }
 
-    // Si encontró en recepcionista o no encontró en admin, devolvemos el resultado original
+    // Si no encuentra resultados en recepcionista, busca en admin
+    $cadenaAdmin = "SELECT *, 'admin' as rol FROM `admin` WHERE `CORREO_ELECTRONICO`=?";
+    $stmtAdmin = $con->prepare($cadenaAdmin);
+    $stmtAdmin->bind_param('s', $CORREO_ELECTRONICO);
+    $stmtAdmin->execute();
+    $resultAdmin = $stmtAdmin->get_result();
+
+    if ($resultAdmin->num_rows > 0) {
+        $admin = $resultAdmin->fetch_assoc();
+        
+        // Aquí no usamos password_verify, solo comparamos directamente con la contraseña en texto plano
+        if ($PASSWORD === $admin['PASSWORD']) {
+            $con->close();
+            return $admin;  // Login exitoso
+        } else {
+            // Contraseña incorrecta para admin
+            return ['error' => 'La contraseña es incorrecta.'];
+        }
+    }
+
+    // Correo electrónico no encontrado
     $con->close();
-    return $result;
+    return ['error' => 'El correo electrónico no está registrado.'];
 }
+
 
 
     // // Procedimiento para obtener todos los recepcionistas de la base de datos

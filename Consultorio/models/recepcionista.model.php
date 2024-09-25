@@ -59,23 +59,27 @@ class RecepcionistaModel {
     // Función para insertar un nuevo paciente
     public static function addRecepcionista($tabla, $datos) {
         $errores = self::validarDatos($datos);
-
+    
         if (!empty($errores)) {
             return ['success' => false, 'errores' => $errores];
         }
-
+    
         $conexion = new Clase_Conectar();
         $db = $conexion->conectar();
-
+    
+        // Encriptar la contraseña antes de guardarla
+        $passwordEncriptada = password_hash($datos['password'], PASSWORD_DEFAULT);
+    
         $query = "INSERT INTO $tabla (NOMBRE, APELLIDO, TELEFONO, CORREO_ELECTRONICO, PASSWORD) VALUES (?, ?, ?, ?, ?)";
         $stmt = $db->prepare($query);
-        $stmt->bind_param("sssss", $datos['nombre'], $datos['apellido'], $datos['telefono'], $datos['correo_electronico'], $datos['password']);
+        $stmt->bind_param("sssss", $datos['nombre'], $datos['apellido'], $datos['telefono'], $datos['correo_electronico'], $passwordEncriptada);
         $result = $stmt->execute();
         $stmt->close();
         $db->close();
-
+    
         return ['success' => $result, 'errores' => []];
     }
+    
 
     // Nueva función para obtener un paciente por ID
     public static function getRecepcionistaById($tabla, $id) {
@@ -99,28 +103,57 @@ class RecepcionistaModel {
     // Función para actualizar un paciente
     public static function updateRecepcionista($tabla, $datos) {
         $errores = self::validarDatos($datos);
-
+    
         if (!empty($errores)) {
             return ['success' => false, 'errores' => $errores];
         }
-
+    
         $conexion = new Clase_Conectar();
         $db = $conexion->conectar();
     
-        // Agregar la cláusula WHERE para actualizar el registro correcto
+        // Encriptar la contraseña antes de actualizarla
+        $passwordEncriptada = password_hash($datos['password'], PASSWORD_DEFAULT);
+    
         $query = "UPDATE $tabla SET NOMBRE = ?, APELLIDO = ?, TELEFONO = ?, CORREO_ELECTRONICO = ?, PASSWORD = ? WHERE ID_RECEPCIONISTA = ?";
         $stmt = $db->prepare($query);
-        
-        // Corregir la asignación de parámetros
-        $stmt->bind_param("sssssi", $datos['nombre'], $datos['apellido'], $datos['telefono'], $datos['correo_electronico'], $datos['password'], $datos['id_recepcionista']);
-        
+        $stmt->bind_param("sssssi", $datos['nombre'], $datos['apellido'], $datos['telefono'], $datos['correo_electronico'], $passwordEncriptada, $datos['id_recepcionista']);
         $result = $stmt->execute();
         $stmt->close();
         $db->close();
     
         return ['success' => $result, 'errores' => []];
     }
-
+    
+    public static function verificarLogin($tabla, $correo, $password) {
+        $conexion = new Clase_Conectar();
+        $db = $conexion->conectar();
+    
+        $query = "SELECT * FROM $tabla WHERE CORREO_ELECTRONICO = ?";
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("s", $correo);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        if ($result->num_rows > 0) {
+            $recepcionista = $result->fetch_assoc();
+            
+            // Verificar si la contraseña ingresada coincide con la contraseña encriptada almacenada
+            if (password_verify($password, $recepcionista['PASSWORD'])) {
+                // Contraseña correcta, iniciar sesión
+                return ['success' => true, 'datos' => $recepcionista];
+            } else {
+                // Contraseña incorrecta
+                return ['success' => false, 'errores' => ['La contraseña es incorrecta.']];
+            }
+        } else {
+            // Correo no encontrado
+            return ['success' => false, 'errores' => ['El correo electrónico no está registrado.']];
+        }
+    
+        $stmt->close();
+        $db->close();
+    }
+    
     // Función para eliminar un paciente
     public static function deleteRecepcionista($tabla, $id_recepcionista) {
         $conexion = new Clase_Conectar();
